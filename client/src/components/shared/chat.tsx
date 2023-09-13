@@ -2,21 +2,23 @@ import { cn } from "@/lib/utils";
 import { Message } from "../direct-messages";
 import { Input } from "../ui";
 import { SendFill } from "@/lib/utils/icons";
+import { ChannelMessageExtended } from "@/types";
 
-type Props = { className?: string };
+type Props = { className?: string; messages: ChannelMessageExtended[] };
 
-export default function Chat({ className }: Props) {
+export default function Chat({ className, messages }: Props) {
   return (
     <main className={cn(className, "grid grid-rows-[var(--chat-height),auto]")}>
       <div className="overflow-y-auto">
-        {[
-          { name: "DeaViNG" },
-          { name: "Yeo Rumi" },
-          { name: "Gaeul" },
-          { name: "Taehoon" },
-          { name: "Jiksae" },
-        ].map((message, idx) => (
-          <Message key={message.name + idx} {...message} />
+        {messages.map((message) => (
+          <Message
+            key={message.id}
+            id={message.id}
+            senderName={message.sender.user.name}
+            content={message.content}
+            senderAvatarUrl={message.sender.user.avatar}
+            timestamp={message.timestamp}
+          />
         ))}
       </div>
       <form className="relative">

@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { credentialSchema, signupSchema } from "@/lib/schemas";
-import { Channel, FriendRequest, Member, User } from ".";
+import {
+  Channel,
+  FriendRequest,
+  FriendRequestReceived,
+  FriendRequestSent,
+  Member,
+  User,
+} from ".";
 
 export type LoginCredentials = z.infer<typeof credentialSchema>;
 
@@ -16,8 +23,8 @@ export type Session = {
 
 export type UserProfileInfo = User & {
   friends: User[];
-  friendRequestSent: FriendRequest[];
-  friendRequestReceived: FriendRequest[];
+  friendRequestSent: FriendRequestSent[];
+  friendRequestReceived: FriendRequestReceived[];
   member: { id: string; channels: Channel[] };
   channels: Channel[];
 };

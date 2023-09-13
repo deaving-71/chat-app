@@ -1,17 +1,29 @@
 import { Dropdown, DropdownItem } from "@/components/ui";
+import { SelectedFriendId } from "@/lib/store";
+import { User } from "@/types";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 
-type Props = {
-  name: string;
-};
+export default function FriendListItem({ id, avatar, name }: User) {
+  const selectFriendProfile = useSetRecoilState(SelectedFriendId);
 
-export default function FriendListItem({ name }: Props) {
+  useEffect(() => {
+    return () => {
+      selectFriendProfile("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <li>
-      <div className="flex items-center justify-between hover:bg-muted lg:px-8 lg:py-2 px-4 py-1 group">
+      <button
+        className="flex items-center justify-between hover:bg-muted lg:px-8 lg:py-2 px-4 py-1 group"
+        onClick={() => selectFriendProfile(id)}
+      >
         <div className="flex items-center">
           <Image
-            src={"/assets/default_avatar.png"}
+            src={avatar}
             alt="Profile Avatar"
             width={36}
             height={36}
@@ -31,7 +43,7 @@ export default function FriendListItem({ name }: Props) {
             </button>
           </DropdownItem>
         </Dropdown>
-      </div>
+      </button>
     </li>
   );
 }

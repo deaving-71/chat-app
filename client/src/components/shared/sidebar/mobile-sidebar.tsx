@@ -1,17 +1,18 @@
 "use client";
 
-import { Arrow, Hashtag, Plus } from "@/lib/utils/icons";
-import { sidebar } from "@/lib/utils/constants";
 import Link from "next/link";
 import Image from "next/image";
+import { Arrow, Hashtag, Plus } from "@/lib/utils/icons";
+import { sidebar } from "@/lib/utils/constants";
+import { useRecoilValue } from "recoil";
+import { Channels, User } from "@/lib/store";
 import { Button } from "../../ui";
 import { useSidebarContext } from "@/context";
 import { motion } from "framer-motion";
-import { useRecoilValue } from "recoil";
-import { User } from "@/lib/store";
 
 export default function MobileSidebar() {
   const { toggleSidebar, isSidebarOpen } = useSidebarContext();
+  const channels = useRecoilValue(Channels);
   const user = useRecoilValue(User);
 
   return (
@@ -81,10 +82,10 @@ export default function MobileSidebar() {
                 Global Channel
               </Link>
             </li>
-            {[{ name: "Channel-1" }].map(({ name }, idx) => (
-              <li key={name + idx}>
+            {channels.map(({ name, id }) => (
+              <li key={id}>
                 <Link
-                  href="#"
+                  href={`/app/channel/${id}`}
                   className="flex items-center font-semibold pl-10 text-sm pr-4 py-2 hover:bg-muted transition-all"
                 >
                   {name}

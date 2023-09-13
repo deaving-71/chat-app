@@ -7,11 +7,12 @@ import Image from "next/image";
 import { Button } from "../../ui";
 import { useSidebarContext } from "@/context";
 import { useRecoilValue } from "recoil";
-import { User } from "@/lib/store";
+import { Channels, User } from "@/lib/store";
 
 export default function DefaultSidebar() {
   const { toggleSidebar } = useSidebarContext();
   const user = useRecoilValue(User);
+  const channels = useRecoilValue(Channels);
 
   return (
     <aside className="w-[240px] row-span-2 border-r border-border sticky top-0 left-0 h-screen overflow-y-auto">
@@ -39,7 +40,7 @@ export default function DefaultSidebar() {
         </div>
       </div>
 
-      {/* //TODO: handle overflow of channels list  */}
+      {/* //TODO: make list of channels scrollable  */}
       <nav>
         <ul>
           {sidebar.map(({ title, Icon, href }, idx) => (
@@ -75,10 +76,10 @@ export default function DefaultSidebar() {
                 Global Channel
               </Link>
             </li>
-            {[{ name: "Channel-1" }].map(({ name }, idx) => (
-              <li key={name + idx}>
+            {channels.map(({ name, id }, idx) => (
+              <li key={id}>
                 <Link
-                  href="#"
+                  href={`/app/channel/${id}`}
                   className="flex items-center font-semibold pl-10 text-sm pr-4 py-2 hover:bg-muted transition-all"
                 >
                   {name}

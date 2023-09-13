@@ -1,4 +1,4 @@
-import { FriendsList, Header, Tabs } from "@/components/friends";
+import { Header, Tabs, FriendsList } from "@/components/friends";
 import FriendProfileInfo from "@/components/friends/friend-profile-info";
 
 export default function App() {

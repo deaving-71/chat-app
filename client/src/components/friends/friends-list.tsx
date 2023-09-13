@@ -1,10 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMediaQuery } from "usehooks-ts";
-import DefaultFriendsList from "./default-friend-list";
-import MobileFriendsList from "./mobile-friend-list";
+import DefaultFriendsList from "./friend-list/default-friend-list";
+import MobileFriendsList from "./friend-list/mobile-friend-list";
 
-export function FriendsList() {
+function FriendsList() {
   const lg = useMediaQuery("(min-width: 1024px)");
 
   const CurrrentFriendList = {
@@ -14,3 +15,5 @@ export function FriendsList() {
 
   return <CurrrentFriendList />;
 }
+
+export default dynamic(() => Promise.resolve(FriendsList), { ssr: false });

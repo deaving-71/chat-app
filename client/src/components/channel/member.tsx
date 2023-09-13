@@ -3,7 +3,12 @@ import React from "react";
 import { StatusDot } from "../shared";
 import { ThreeDots } from "@/lib/utils/icons";
 
-export default function Member({ name, status }: any) {
+type Props = {
+  name: string;
+  status: boolean;
+};
+
+export default function Member({ name, status }: Props) {
   return (
     <li className="flex gap-1 w-full p-1 hover:bg-muted transition-all group px-4">
       <div className="relative rounded-full w-8 h-8 mr-2">

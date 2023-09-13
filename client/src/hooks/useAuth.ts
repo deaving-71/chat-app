@@ -1,20 +1,26 @@
 import { login, logout, register, getAccessToken } from "@/lib/actions";
-import { Session, User } from "@/lib/store";
-import { logExceptions } from "@/lib/utils";
+import {
+  FriendRequestsReceived,
+  FriendRequestsSent,
+  Friends,
+  OwnedChannels,
+  Session,
+  Channels,
+  User,
+} from "@/lib/store";
 import { LoginCredentials, SignInOptions, UserProfileInfo } from "@/types";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 
 function useAuth() {
   const setSession = useSetRecoilState(Session);
   const setUser = useSetRecoilState(User);
+  const setChannels = useSetRecoilState(Channels);
+  const setOwnedChannels = useSetRecoilState(OwnedChannels);
+  const setFriends = useSetRecoilState(Friends);
+  const setFriendRequestsReceived = useSetRecoilState(FriendRequestsReceived);
+  const setFriendRequestsSents = useSetRecoilState(FriendRequestsSent);
   const router = useRouter();
-
-  useEffect(() => {
-    setSession({ status: "loading" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const signIn = async (data: LoginCredentials) => {
     const response = await login(data);
@@ -27,6 +33,7 @@ function useAuth() {
   };
 
   const setUserProfile = (data: UserProfileInfo) => {
+    console.log(data);
     const {
       friends,
       friendRequestReceived,
@@ -37,6 +44,11 @@ function useAuth() {
     } = data;
 
     setUser(User);
+    setChannels(member.channels);
+    setOwnedChannels(channels);
+    setFriends(friends);
+    setFriendRequestsReceived(friendRequestReceived);
+    setFriendRequestsSents(friendRequestSent);
   };
 
   const signUp = async () => {};

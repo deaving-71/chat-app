@@ -29,6 +29,7 @@ function AuthProvider({
     queryKey: ["getProfile", status, session?.status],
     queryFn: async () => {
       const data = await getProfile();
+      setUserProfile(data);
       return data;
     },
     cacheTime: 1000 * 60 * 60, // 1hr

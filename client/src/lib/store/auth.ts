@@ -2,11 +2,11 @@ import { Session } from "@/types";
 import { atom } from "recoil";
 
 const defaultSession: Session = {
-  status: "unauthenticated",
+  status: "loading",
 };
 
 const Session = atom<Session>({
-  key: "session",
+  key: "Session",
   default: defaultSession,
 });
 

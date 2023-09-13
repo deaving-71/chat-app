@@ -1,8 +1,8 @@
-import { User } from "@/types";
+import { User as TUser} from "@/types";
 import { atom } from "recoil";
 
-const User = atom<User | null>({
-  key: "user",
+const User = atom<TUser | null>({
+  key: "User",
   default: null,
 });
 

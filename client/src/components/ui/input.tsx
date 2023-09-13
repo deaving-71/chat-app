@@ -26,6 +26,7 @@ const inputVariants = cva("outline-none transition-all", {
 type InputProps = React.ComponentProps<"input"> &
   VariantProps<typeof inputVariants>;
 
+// eslint-disable-next-line react/display-name
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, variant, size = "default", ...props }, ref) => (
     <input

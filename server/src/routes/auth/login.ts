@@ -20,8 +20,16 @@ const login: RouteHandler = async (request, response) => {
     include: {
       channels: true,
       friends: true,
-      friendRequestReceived: true,
-      friendRequestSent: true,
+      friendRequestReceived: {
+        include: {
+          sender: true,
+        },
+      },
+      friendRequestSent: {
+        include: {
+          receiver: true,
+        },
+      },
       member: {
         select: {
           id: true,

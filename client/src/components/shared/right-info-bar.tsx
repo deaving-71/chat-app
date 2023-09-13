@@ -1,13 +1,14 @@
 "use client";
 
-import DefaultRightInfoBar from "./default-right-info-bar";
-import MobileRightInfoBar from "./mobile-right-info-bar";
+import dynamic from "next/dynamic";
+import DefaultRightInfoBar from "./right-info-bar/default-right-info-bar";
+import MobileRightInfoBar from "./right-info-bar/mobile-right-info-bar";
 import { useMediaQuery } from "usehooks-ts";
 import { MotionProps } from "framer-motion";
 
 type Props = React.ComponentPropsWithRef<"aside"> & MotionProps;
 
-export default function RightInfoBar(props: Props) {
+function RightInfoBar(props: Props) {
   const lg = useMediaQuery("(min-width: 1024px)");
 
   const CurrentRightinfobar = {
@@ -17,3 +18,5 @@ export default function RightInfoBar(props: Props) {
 
   return <CurrentRightinfobar {...props} />;
 }
+
+export default dynamic(() => Promise.resolve(RightInfoBar), { ssr: false });

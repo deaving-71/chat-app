@@ -52,3 +52,11 @@ Features:
 - Public rooms (with descriptions) that anyone can join.
 
 #########################################################################################################
+
+IMPORTANT NOTE:
+when user wants to start a new conversation
+- they select a friend from their friend list then by clicking on send message
+  they are taken to "/app/direct-messages/" and there they can see the user receiver's
+  name and their status.
+- the moment they send a message, a new conversation will be created in database after getting a success response
+  we redirect user to "/app/direct-messages/:conversationId" and there they can continue their chat.

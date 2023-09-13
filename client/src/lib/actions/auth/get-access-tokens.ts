@@ -5,17 +5,17 @@ async function getAccessToken() {
     credentials: "include",
   });
 
-  const data = await response.json();
+  const result = await response.json();
 
   if (!response.ok)
     throw {
       message: "Failed to refresh tokens.",
-      reason: data,
+      reason: result,
     };
 
-  if (response.status !== 200) throw data;
+  if (response.status !== 200) throw result;
 
-  return data;
+  return result;
 }
 
 export default getAccessToken;

@@ -1,27 +1,43 @@
+import { Sender, User } from "@/types";
 import { Member } from ".";
-import { List } from "./members";
+import { filterMembers } from "@/lib/utils";
 
-export default function ChannelMembers({ list }: { list: List }) {
+type Props = {
+  channelOwner: User;
+  members: Sender[];
+};
+
+export default function ChannelMembers({ channelOwner, members }: Props) {
+  const [onlineMembers, offlineMembers] = filterMembers(members);
+
   return (
     <ul className="flex flex-col gap-4 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto">
       <div>
         <h2 className="font-semibold px-2">Owner</h2>
         <Member
-          key={list.owner.name + "owner"}
-          name={list.owner.name}
-          status={list.owner.status}
+          key={channelOwner.id}
+          name={channelOwner.name}
+          status={channelOwner.isActive}
         />
       </div>
       <div>
-        <h2 className="font-semibold px-2">Online - {list.online.length}</h2>
-        {list.online.map((name, idx) => (
-          <Member key={name + idx} name={name} status="on" />
+        <h2 className="font-semibold px-2">Online - {onlineMembers.length}</h2>
+        {onlineMembers.map((member) => (
+          <Member
+            key={member.id}
+            name={member.user.name}
+            status={member.user.isActive}
+          />
         ))}
       </div>
       <div>
-        <h2 className="font-semibold px-2">Offline {list.offline.length}</h2>
-        {list.offline.map((name, idx) => (
-          <Member key={name + idx} name={name} status="off" />
+        <h2 className="font-semibold px-2">Offline {offlineMembers.length}</h2>
+        {offlineMembers.map((member) => (
+          <Member
+            key={member.id}
+            name={member.user.name}
+            status={member.user.isActive}
+          />
         ))}
       </div>
     </ul>

@@ -16,7 +16,7 @@ model User {
   password  String    @db.Text
   email     String    @unique @db.VarChar(255)
   name      String    @map("displayName") @db.VarChar(255)
-  avatar    String?   @default("/assets/avatar_male.png")
+  avatar    String    @default("/assets/default_avatar.png")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   isActive  Boolean   @default(false)

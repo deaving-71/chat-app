@@ -1,16 +1,43 @@
+"use client";
+
 import { Header, Members } from "@/components/channel";
 import { Chat } from "@/components/shared";
+import { User } from "@/lib/store";
+import { useQuery } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+import { getChannel } from "@/lib/actions";
 
-type Props = {};
+type Props = {
+  params: { channelId: string };
+};
 
-export default function Channel({}: Props) {
+export default function Channel({ params: { channelId } }: Props) {
+  const user = useRecoilValue(User);
+  const {
+    data: channel,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["channel", channelId],
+    queryFn: () => getChannel(channelId),
+    enabled: !!user,
+  });
+
+  if (isError) console.error(error);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!channel)
+    return <div>error while trying to get this channel&apos;s records </div>;
+
+  console.log(channel);
   return (
-    <div className="grid grid-cols-[1fr,auto] grid-rows-1">
+    <>
       <div className="flex flex-col h-screen">
-        <Header />
-        <Chat className="flex-1" />
+        <Header channelName={channel.name} />
+        <Chat className="flex-1" messages={channel.messages} />
       </div>
-      <Members />
-    </div>
+      <Members channelOwner={channel.owner} members={channel.members} />
+    </>
   );
 }

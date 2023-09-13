@@ -1,26 +1,15 @@
+import { useRecoilValue } from "recoil";
 import FriendListItem from "./friend-list-item";
+import { Friends } from "@/lib/store";
 
 export default function DefaultFriendsList() {
+  const friends = useRecoilValue(Friends);
+
   return (
     <ul className="pb-8">
-      {[
-        { name: "DeaViNG", status: "online" },
-        { name: "another", status: "online" },
-        { name: "another", status: "online" },
-        { name: "another", status: "online" },
-        { name: "another", status: "online" },
-        { name: "another", status: "online" },
-        { name: "another", status: "online" },
-        { name: "another", status: "offline" },
-        { name: "another", status: "offline" },
-        { name: "another", status: "offline" },
-        { name: "another", status: "pending" },
-        { name: "another", status: "pending" },
-        { name: "another", status: "pending" },
-        { name: "another", status: "online" },
-      ].map((friend, idx) => {
-        return <FriendListItem key={friend.name + idx} {...friend} />;
-      })}
+      {friends.map((friend) => (
+        <FriendListItem key={friend.id} {...friend} />
+      ))}
     </ul>
   );
 }

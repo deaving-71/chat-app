@@ -6,3 +6,21 @@ export const sidebar = [
 ];
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+/*
+const list = {
+  owner: {
+    name: "DeaViNG",
+    status: "on",
+  },
+  online: ["Gaeul", "Taehoon", "Jiksae"],
+  offline: ["Gyeoul", "Choi Bomi", "Yeo Rumi"],
+};
+[
+  { name: "DeaViNG" },
+  { name: "Yeo Rumi" },
+  { name: "Gaeul" },
+  { name: "Taehoon" },
+  { name: "Jiksae" },
+]
+*/

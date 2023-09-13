@@ -1,12 +1,13 @@
 "use client";
 
-import DefaultSidebar from "./default-sidebar";
-import CollapsedSidebar from "./collapsed-sidebar";
-import MobileSidebar from "./mobile-sidebar";
+import dynamic from "next/dynamic";
+import DefaultSidebar from "./sidebar/default-sidebar";
+import CollapsedSidebar from "./sidebar/collapsed-sidebar";
+import MobileSidebar from "./sidebar/mobile-sidebar";
 import { useSidebarContext } from "@/context";
 import { useMediaQuery } from "usehooks-ts";
 
-export default function Sidebar() {
+function Sidebar() {
   const { isSidebarOpen } = useSidebarContext();
   const lg = useMediaQuery("(min-width: 1024px)");
 
@@ -17,3 +18,5 @@ export default function Sidebar() {
 
   return lg ? <CurrentSidebar /> : <MobileSidebar />;
 }
+
+export default dynamic(() => Promise.resolve(Sidebar), { ssr: false });
