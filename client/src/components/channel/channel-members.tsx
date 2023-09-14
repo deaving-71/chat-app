@@ -1,6 +1,7 @@
 import { Sender, User } from "@/types";
 import { Member } from ".";
 import { filterMembers } from "@/lib/utils";
+import { useState } from "react";
 
 type Props = {
   channelOwner: User;
@@ -8,7 +9,8 @@ type Props = {
 };
 
 export default function ChannelMembers({ channelOwner, members }: Props) {
-  const [onlineMembers, offlineMembers] = filterMembers(members);
+  const [_members, setMembers] = useState(members);
+  const [onlineMembers, offlineMembers] = filterMembers(_members);
 
   return (
     <ul className="flex flex-col gap-4 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto">

@@ -3,3 +3,4 @@ export * from "./auth";
 export * from "./friends";
 export * from "./conversations";
 export * from "./channels";
+export * from "./socket";

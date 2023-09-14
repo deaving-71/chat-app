@@ -1,6 +1,13 @@
 import { Prisma } from "../../lib";
 import { CallbackResponse, IOHandler } from "../../types";
 
+type SendMessagePayload = {
+  channelId: string;
+  memberId: string;
+  messageContent: string;
+  cb: CallbackResponse;
+};
+
 const ChannelsHandler: IOHandler = (app, socket) => {
   socket.on("channel:join-channel", joinChannel);
   // socket.on("channel:join-room", joinRoom);
@@ -59,20 +66,17 @@ const ChannelsHandler: IOHandler = (app, socket) => {
   }
 */
 
-  async function sendMessage(
-    channelId: string,
-    memberId: string,
-    messageContent: string,
-    cb: CallbackResponse
-  ) {
+  async function sendMessage(payload: SendMessagePayload) {
+    const { channelId, memberId, cb, messageContent } = payload;
+
     try {
       const channel = await getChannel(channelId);
       if (!channel) {
-        // cb({
-        //     success: false,
-        //     message: "Invalid channel ID.",
-        //     data: null,
-        // })
+        cb({
+          success: false,
+          message: "Invalid channel ID.",
+          data: null,
+        });
         return;
       }
       const message = await Prisma.channelMessage.create({
@@ -81,6 +85,11 @@ const ChannelsHandler: IOHandler = (app, socket) => {
           senderId: memberId,
           content: messageContent,
         },
+      });
+      cb({
+        success: true,
+        message: "Message received.",
+        data: message,
       });
       app.io.to(channel.id).emit("channel:received-message", message);
       console.log(

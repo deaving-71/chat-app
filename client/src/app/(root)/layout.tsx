@@ -1,6 +1,7 @@
 "use client";
 
 import { BlackCover, Sidebar } from "@/components/shared";
+import { SocketContextProvider } from "@/context/";
 import { Session } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -21,12 +22,12 @@ export default function AppLayout({ children }: Props) {
   }, [session?.status]);
 
   return (
-    <>
+    <SocketContextProvider>
       <BlackCover />
       <div className="lg:grid grid-cols-[auto,1fr] grid-rows-1 min-h-screen h-full">
         <Sidebar />
         {children}
       </div>
-    </>
+    </SocketContextProvider>
   );
 }

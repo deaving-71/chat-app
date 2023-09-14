@@ -1,13 +1,6 @@
 import { z } from "zod";
 import { credentialSchema, signupSchema } from "@/lib/schemas";
-import {
-  Channel,
-  FriendRequest,
-  FriendRequestReceived,
-  FriendRequestSent,
-  Member,
-  User,
-} from ".";
+import { Channel, FriendRequestReceived, FriendRequestSent, User } from ".";
 
 export type LoginCredentials = z.infer<typeof credentialSchema>;
 

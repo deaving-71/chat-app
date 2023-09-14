@@ -25,7 +25,6 @@ export default function Channel({ params: { channelId } }: Props) {
   });
 
   if (isError) console.error(error);
-
   if (isLoading) return <div>Loading...</div>;
   if (!channel)
     return <div>error while trying to get this channel&apos;s records </div>;
