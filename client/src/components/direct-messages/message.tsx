@@ -16,7 +16,7 @@ export default function Message({
   senderAvatarUrl,
   content,
   timestamp,
-}: Props) {
+}: Partial<Props>) {
   return (
     <div className="flex px-8 py-2 hover:bg-muted transition-all group">
       <Image

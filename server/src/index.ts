@@ -41,7 +41,13 @@ app.register(cors, {
   origin: ["http://localhost:4000", "http://127.0.0.1:4000"],
 });
 app.register(store);
-app.register(SocketIO);
+app.register(SocketIO, {
+  path: "/socket.io",
+  cors: {
+    origin: ["http://localhost:4000", "http://127.0.0.1:4000"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  },
+});
 app.register(customresponses);
 app.setErrorHandler(errorHandler);
 
@@ -69,7 +75,6 @@ app.register(async (app) => {
   app.register(ChannelRoute, { prefix: "api/channels" });
   app.register(ConversationsRoute, { prefix: "api/conversations" });
   app.register(SignOut, { prefix: "api/auth" });
-
   app.get("/protected", (request) => {
     return { message: "you have hit a protected route", user: request.user };
   });

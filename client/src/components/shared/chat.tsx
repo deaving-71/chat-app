@@ -1,23 +1,35 @@
 import { cn, socket } from "@/lib/utils";
-import { Message } from "../direct-messages";
 import { Input } from "../ui";
 import { SendFill } from "@/lib/utils/icons";
-import { ChannelMessageExtended, SendMessagePayload } from "@/types";
+import { FilteredMessage, SendMessagePayload } from "@/types";
 import { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { User } from "@/lib/store";
+import { Messages } from "../channel";
 
 type Props = {
   className?: string;
-  messages?: ChannelMessageExtended[];
+  filteredMessages?: FilteredMessage[];
   channelId?: string;
 };
 
-export default function Chat({ className, messages, channelId }: Props) {
+export default function Chat({
+  className,
+  filteredMessages,
+  channelId,
+}: Props) {
   const user = useRecoilValue(User);
-  const [_messages, setMessages] = useState(messages);
+  const [messages, setMessages] = useState(filteredMessages);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  function appendMessage(message: FilteredMessage) {
+    setMessages((prev) => {
+      if (prev) {
+        return [...prev, message];
+      }
+      return [message];
+    });
+  }
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();
 
@@ -26,11 +38,22 @@ export default function Chat({ className, messages, channelId }: Props) {
       !inputRef.current ||
       !channelId ||
       !user ||
-      inputRef.current.value.length === 0
+      inputRef.current.value.trim() === ""
     )
       return;
 
     const messageContent = inputRef.current.value;
+    const optimisticMessage: FilteredMessage = {
+      id: crypto.randomUUID(),
+      senderAvatar: user.avatar,
+      senderName: user.name,
+      senderId: user.memberId,
+      content: messageContent,
+      status: "pending",
+    };
+
+    inputRef.current.value = "";
+    appendMessage(optimisticMessage);
     const payload: SendMessagePayload = {
       channelId: channelId,
       memberId: user.memberId,
@@ -39,11 +62,15 @@ export default function Chat({ className, messages, channelId }: Props) {
         if (success) {
           console.log(message);
           console.log(data);
-          setMessages((prev) => {
-            if (prev) {
-              return [...prev, data];
-            }
-            return [data];
+          appendMessage({
+            id: data.id,
+            content: data.content,
+            senderAvatar: data.sender.user.avatar,
+            senderName: data.sender.user.name,
+            senderId: data.senderId,
+            channelId: data.channelId,
+            status: "sent",
+            timestamp: data.timestamp,
           });
         } else {
           console.error(message);
@@ -56,17 +83,7 @@ export default function Chat({ className, messages, channelId }: Props) {
   return (
     <main className={cn(className, "grid grid-rows-[var(--chat-height),auto]")}>
       <div className="overflow-y-auto">
-        {_messages &&
-          _messages.map((message) => (
-            <Message
-              key={message.id}
-              id={message.id}
-              senderName={message.sender.user.name}
-              content={message.content}
-              senderAvatarUrl={message.sender.user.avatar}
-              timestamp={message.timestamp}
-            />
-          ))}
+        {messages && <Messages messages={messages} />}
       </div>
       <form className="relative" onSubmit={(e) => sendMessage(e)}>
         <Input

@@ -1,4 +1,4 @@
-import { Sender } from "@/types";
+import { ChannelMessageExtended, Sender } from "@/types";
 
 /**
  * filter online and offline members from a list of members of a certain channel.
@@ -16,4 +16,15 @@ function filterMembers(members: Sender[]) {
   return [onlineMembers, offlineMembers];
 }
 
-export { filterMembers };
+function filterChannelMessages(messages: ChannelMessageExtended[]) {
+  return messages.map((message) => {
+    const { sender, ...rest } = message;
+    return {
+      ...rest,
+      senderName: sender.user.name,
+      senderAvatar: sender.user.avatar,
+    };
+  });
+}
+
+export { filterMembers, filterChannelMessages };

@@ -1,4 +1,4 @@
-import { ChannelExtended } from "@/types";
+import { ChannelQueryResponse } from "@/types";
 import { API_URL } from "../../utils";
 
 async function getChannel(id: string) {
@@ -16,7 +16,7 @@ async function getChannel(id: string) {
 
   if (response.status !== 200) throw result;
 
-  return result as ChannelExtended;
+  return result as ChannelQueryResponse;
 }
 
 export default getChannel;

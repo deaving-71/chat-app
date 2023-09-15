@@ -1,8 +1,8 @@
-import { Friends } from "@/lib/store";
+import { Friends, Session, User } from "@/lib/store";
 import { socket } from "@/lib/utils";
 import { SocketData } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 type SocketContext = {
   isConnected: boolean;
@@ -24,6 +24,7 @@ type Props = {
 
 const SocketContextProvider = ({ children }: Props) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const session = useRecoilValue(Session);
   const setFriends = useSetRecoilState(Friends);
 
   useEffect(() => {
@@ -46,16 +47,20 @@ const SocketContextProvider = ({ children }: Props) => {
       });
     }
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("user:status", handleUserStatus);
+    console.log("in the socket useEffect");
+    if (session?.status === "authenticated") {
+      socket.on("connect", onConnect);
+      socket.on("disconnect", onDisconnect);
+      socket.on("user:status", handleUserStatus);
+      console.log(socket);
+    }
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [session?.status]);
 
   return (
     <SocketContext.Provider value={{ isConnected }}>

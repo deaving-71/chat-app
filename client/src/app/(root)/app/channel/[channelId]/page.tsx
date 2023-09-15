@@ -6,6 +6,7 @@ import { User } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { getChannel } from "@/lib/actions";
+import { filterChannelMessages } from "@/lib/utils";
 
 type Props = {
   params: { channelId: string };
@@ -34,7 +35,11 @@ export default function Channel({ params: { channelId } }: Props) {
     <>
       <div className="flex flex-col h-screen">
         <Header channelName={channel.name} />
-        <Chat className="flex-1" messages={channel.messages} />
+        <Chat
+          className="flex-1"
+          filteredMessages={filterChannelMessages(channel.messages)}
+          channelId={channel.id}
+        />
       </div>
       <Members channelOwner={channel.owner} members={channel.members} />
     </>

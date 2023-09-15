@@ -4,7 +4,7 @@ export type SocketData = {
   memeberId: string;
 };
 
-export type CallbackResponse<T> = (
+export type AcknowledgementCallback<T> = (
   arg:
     | {
         message: string;

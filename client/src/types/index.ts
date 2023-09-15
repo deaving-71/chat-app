@@ -4,3 +4,4 @@ export * from "./friends";
 export * from "./conversations";
 export * from "./channels";
 export * from "./socket";
+export * from "./utility";

@@ -85,6 +85,13 @@ const ChannelsHandler: IOHandler = (app, socket) => {
           senderId: memberId,
           content: messageContent,
         },
+        include: {
+          sender: {
+            include: {
+              user: true,
+            },
+          },
+        },
       });
       cb({
         success: true,

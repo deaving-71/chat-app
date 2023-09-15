@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { Session, User } from "../store";
 import { useAuth } from "@/hooks";
