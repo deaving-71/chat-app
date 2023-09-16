@@ -2,13 +2,8 @@ import { SearchIcon } from "@/lib/utils/icons";
 import { Input } from "../ui";
 import { ChannelMembers } from ".";
 import { RightInfoBar } from "../shared";
-import { Sender, User } from "@/types";
 
-type Props = {
-  channelOwner: User;
-  members: Sender[];
-};
-export default function Members({ channelOwner, members }: Props) {
+export default function Members() {
   return (
     <RightInfoBar className="w-[240px] row-span-2 border-l border-border sticky top-0 left-0 overflow-y-auto">
       <div className="h-[60px] flex items-center justify-center gap-[0.125rem]">
@@ -24,7 +19,7 @@ export default function Members({ channelOwner, members }: Props) {
           className="px-0 h-10 w-48 placeholder:text-sm"
         />
       </div>
-      <ChannelMembers channelOwner={channelOwner} members={members} />
+      <ChannelMembers />
     </RightInfoBar>
   );
 }

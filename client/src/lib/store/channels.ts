@@ -1,4 +1,4 @@
-import { Channel } from "@/types";
+import { Channel, CurrentChannel } from "@/types";
 import { atom } from "recoil";
 
 const Channels = atom<Channel[]>({
@@ -11,4 +11,9 @@ const OwnedChannels = atom<Channel[]>({
   default: [],
 });
 
-export { OwnedChannels, Channels };
+const CurrentChannel = atom<CurrentChannel | null>({
+  key: "CurrentChannel",
+  default: null,
+});
+
+export { OwnedChannels, Channels, CurrentChannel };

@@ -1,50 +1,44 @@
-import { cn, socket } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Input } from "../ui";
 import { SendFill } from "@/lib/utils/icons";
-import { FilteredMessage, SendMessagePayload } from "@/types";
-import { useRef, useState } from "react";
+import {
+  AcknowledgementCallback,
+  ChannelMessageWithStatus,
+  FilteredMessage,
+  SendChannelMessagePayload,
+} from "@/types";
+import { useRef } from "react";
 import { useRecoilValue } from "recoil";
-import { User } from "@/lib/store";
+import { CurrentChannel, User } from "@/lib/store";
 import { Messages } from "../channel";
+import { useSocket } from "@/context";
 
 type Props = {
   className?: string;
-  filteredMessages?: FilteredMessage[];
-  channelId?: string;
 };
 
-export default function Chat({
-  className,
-  filteredMessages,
-  channelId,
-}: Props) {
+export default function Chat({ className }: Props) {
   const user = useRecoilValue(User);
-  const [messages, setMessages] = useState(filteredMessages);
+  const currentChannel = useRecoilValue(CurrentChannel);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { socket, appendChannelMessage, updateChannelMessage } = useSocket();
 
-  function appendMessage(message: FilteredMessage) {
-    setMessages((prev) => {
-      if (prev) {
-        return [...prev, message];
-      }
-      return [message];
-    });
-  }
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();
 
     if (
       !inputRef ||
       !inputRef.current ||
-      !channelId ||
       !user ||
+      !currentChannel ||
       inputRef.current.value.trim() === ""
     )
       return;
 
+    const generatedId = crypto.randomUUID();
     const messageContent = inputRef.current.value;
     const optimisticMessage: FilteredMessage = {
-      id: crypto.randomUUID(),
+      id: generatedId,
       senderAvatar: user.avatar,
       senderName: user.name,
       senderId: user.memberId,
@@ -53,16 +47,22 @@ export default function Chat({
     };
 
     inputRef.current.value = "";
-    appendMessage(optimisticMessage);
-    const payload: SendMessagePayload = {
-      channelId: channelId,
+    appendChannelMessage(optimisticMessage);
+    const payload: SendChannelMessagePayload = {
+      channelId: currentChannel?.id,
       memberId: user.memberId,
       messageContent: messageContent,
-      cb: ({ message, data, success }) => {
-        if (success) {
-          console.log(message);
-          console.log(data);
-          appendMessage({
+    };
+    const ack: AcknowledgementCallback<ChannelMessageWithStatus> = ({
+      message,
+      data,
+      success,
+    }) => {
+      if (success) {
+        console.log(message);
+        console.log(data);
+        updateChannelMessage(
+          {
             id: data.id,
             content: data.content,
             senderAvatar: data.sender.user.avatar,
@@ -71,19 +71,20 @@ export default function Chat({
             channelId: data.channelId,
             status: "sent",
             timestamp: data.timestamp,
-          });
-        } else {
-          console.error(message);
-        }
-      },
+          },
+          generatedId
+        );
+      } else {
+        console.error(message);
+      }
     };
-    socket.emit("channel:send-message", payload);
+    socket?.emit("channel:send-message", payload, ack);
   }
 
   return (
     <main className={cn(className, "grid grid-rows-[var(--chat-height),auto]")}>
       <div className="overflow-y-auto">
-        {messages && <Messages messages={messages} />}
+        {currentChannel && <Messages messages={currentChannel.messages} />}
       </div>
       <form className="relative" onSubmit={(e) => sendMessage(e)}>
         <Input

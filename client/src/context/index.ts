@@ -1,2 +1,2 @@
 export { SidebarContextProvider, useSidebarContext } from "./sidebar-context";
-export { SocketContextProvider, useSocket } from "./socket-context";
+export { useSocket, SocketContextProvider } from "./socket-context";

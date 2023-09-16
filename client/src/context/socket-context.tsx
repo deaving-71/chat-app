@@ -1,11 +1,16 @@
-import { Friends, Session, User } from "@/lib/store";
-import { socket } from "@/lib/utils";
-import { SocketData } from "@/types";
+"use client";
+
+import { CurrentChannel, Friends, Session, User } from "@/lib/store";
+import { ChannelMessageWithStatus, FilteredMessage, SocketData } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { Socket, io as ClientIO } from "socket.io-client";
 
 type SocketContext = {
   isConnected: boolean;
+  socket: Socket | null;
+  appendChannelMessage: (message: FilteredMessage) => void;
+  updateChannelMessage: (message: FilteredMessage, messageId: string) => void;
 };
 
 const SocketContext = createContext<SocketContext | null>(null);
@@ -23,47 +28,106 @@ type Props = {
 };
 
 const SocketContextProvider = ({ children }: Props) => {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(socket?.connected || false);
   const session = useRecoilValue(Session);
+  const user = useRecoilValue(User);
   const setFriends = useSetRecoilState(Friends);
+  const [currentChannel, setCurrentChannel] = useRecoilState(CurrentChannel);
+
+  const onConnect = () => setIsConnected(true);
+  const onDisconnect = () => setIsConnected(false);
+
+  function appendChannelMessage(message: FilteredMessage) {
+    setCurrentChannel((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        messages: [...prev.messages, message],
+      };
+    });
+  }
+
+  function updateChannelMessage(updates: FilteredMessage, id: string) {
+    setCurrentChannel((prev) => {
+      if (!prev) return null;
+
+      const messages = prev.messages.map((message) => {
+        if (message.id !== id) return message;
+        return updates;
+      });
+
+      return {
+        ...prev,
+        messages,
+      };
+    });
+  }
+
+  function ReceiveChannelMessage(message: ChannelMessageWithStatus) {
+    const {
+      sender: {
+        user: { avatar, name },
+      },
+      ...rest
+    } = message;
+    appendChannelMessage({
+      ...rest,
+      senderAvatar: avatar,
+      senderName: name,
+    });
+  }
+
+  function handleUserStatus(data: SocketData & { isActive: boolean }) {
+    setFriends((prev) => {
+      return prev.map((friend) => {
+        if (friend.id === data.id) {
+          return { ...friend, isActive: data.isActive };
+        }
+        return friend;
+      });
+    });
+  }
 
   useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function handleUserStatus(data: SocketData & { isActive: boolean }) {
-      setFriends((prev) => {
-        return prev.map((friend) => {
-          if (friend.id === data.id) {
-            return { ...friend, isActive: data.isActive };
-          }
-          return friend;
-        });
+    if (session?.status === "authenticated" && user) {
+      const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL, {
+        path: "/socket.io",
+        autoConnect: false,
+        withCredentials: true,
+        auth: {
+          id: user.id,
+          username: user.username,
+          memberId: user.memberId,
+        },
       });
-    }
+      socketInstance.connect();
+      socketInstance.on("connect", onConnect);
+      socketInstance.on("disconnect", onDisconnect);
+      socketInstance.on("channel:received-message", ReceiveChannelMessage);
+      socketInstance.on("user:status", handleUserStatus);
 
-    console.log("in the socket useEffect");
-    if (session?.status === "authenticated") {
-      socket.on("connect", onConnect);
-      socket.on("disconnect", onDisconnect);
-      socket.on("user:status", handleUserStatus);
-      console.log(socket);
+      setSocket(socketInstance);
     }
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
+      socket?.off("connect");
+      socket?.off("disconnect");
+      socket?.off("user:status");
+      socket?.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.status]);
+  }, [session?.status, user?.id]);
 
   return (
-    <SocketContext.Provider value={{ isConnected }}>
+    <SocketContext.Provider
+      value={{
+        isConnected,
+        socket,
+        appendChannelMessage,
+        updateChannelMessage,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );

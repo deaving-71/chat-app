@@ -1,13 +1,13 @@
-import { AcknowledgementCallback, Channel, ChannelMessage, User } from ".";
+import { Channel, ChannelMessage, Member, User } from ".";
 import { Optional } from "./utility";
 
 export type ChannelQueryResponse = Channel & {
   members: Sender[];
-  messages: ChannelMessageExtended[];
+  messages: ChannelMessageWithStatus[];
   owner: User;
 };
 
-export type ChannelMessageExtended = ChannelMessage & {
+export type ChannelMessageWithStatus = ChannelMessage & {
   sender: Sender;
   status?: "pending" | "sent";
 };
@@ -19,19 +19,27 @@ export type Sender = {
   userId: string;
 };
 
-export type SendMessagePayload = {
+export type SendChannelMessagePayload = {
   channelId: string;
   memberId: string;
   messageContent: string;
-  cb: AcknowledgementCallback<ChannelMessageExtended>;
 };
 
-export type FilterChannelMessages = Omit<ChannelMessageExtended, "sender"> & {
+export type FilteredChannelMessages = Omit<
+  ChannelMessageWithStatus,
+  "sender"
+> & {
   senderName: string;
   senderAvatar: string;
 };
 
 export type FilteredMessage = Optional<
-  FilterChannelMessages,
+  FilteredChannelMessages,
   "timestamp" | "channelId"
 >;
+
+export type CurrentChannel = Omit<ChannelQueryResponse, "messages"> & {
+  messages: FilteredMessage[];
+  members: Member[];
+  owner: User;
+};

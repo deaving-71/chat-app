@@ -1,12 +1,12 @@
 import { Prisma } from "../../lib";
-import { CallbackResponse, IOHandler } from "../../types";
+import { Acknowledgment, IOHandler } from "../../types";
 
 const friendsHandler: IOHandler = (app, socket) => {
   socket.on("friends:send-request", sendRequest);
   socket.on("friends:accept-request", acceptRequest);
   socket.on("friends:decline-request", declineRequest);
 
-  async function sendRequest(receiverId: string, cb: CallbackResponse) {
+  async function sendRequest(receiverId: string, cb: Acknowledgment) {
     console.log(receiverId);
     try {
       if (receiverId === socket.data.id) {
@@ -52,7 +52,7 @@ const friendsHandler: IOHandler = (app, socket) => {
     }
   }
 
-  async function acceptRequest(senderId: string, cb: CallbackResponse) {
+  async function acceptRequest(senderId: string, cb: Acknowledgment) {
     try {
       const request = await Prisma.friendRequest.findFirst({
         where: {
@@ -106,7 +106,7 @@ const friendsHandler: IOHandler = (app, socket) => {
     }
   }
 
-  async function declineRequest(requestId: string, cb: CallbackResponse) {
+  async function declineRequest(requestId: string, cb: Acknowledgment) {
     try {
       const request = await Prisma.friendRequest.delete({
         where: {

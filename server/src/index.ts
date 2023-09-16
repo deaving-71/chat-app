@@ -35,19 +35,17 @@ const app = Fastify({
   logger: envToLogger.dev,
 });
 
-app.register(fastifyEnv);
-app.register(cors, {
+const corsOptions = {
+  origin: ["http://localhost:4000", "http:127.0.0.1:4000"],
   credentials: true,
-  origin: ["http://localhost:4000", "http://127.0.0.1:4000"],
+};
+
+app.register(fastifyEnv);
+app.register(cors, corsOptions);
+app.register(SocketIO, {
+  cors: corsOptions
 });
 app.register(store);
-app.register(SocketIO, {
-  path: "/socket.io",
-  cors: {
-    origin: ["http://localhost:4000", "http://127.0.0.1:4000"],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  },
-});
 app.register(customresponses);
 app.setErrorHandler(errorHandler);
 
@@ -64,6 +62,9 @@ app.register(cookie, {
 app.register(async (app) => {
   /* non authenticated routes */
   app.register(Auth, { prefix: "/api/auth" });
+  app.get("/healthcheck", () => {
+    return "ok";
+  });
 });
 
 app.register(async (app) => {
@@ -75,9 +76,6 @@ app.register(async (app) => {
   app.register(ChannelRoute, { prefix: "api/channels" });
   app.register(ConversationsRoute, { prefix: "api/conversations" });
   app.register(SignOut, { prefix: "api/auth" });
-  app.get("/protected", (request) => {
-    return { message: "you have hit a protected route", user: request.user };
-  });
 });
 
 async function start() {

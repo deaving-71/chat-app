@@ -43,7 +43,7 @@ function useAuth() {
       ...User
     } = data;
 
-    setUser(User);
+    setUser({ ...User, memberId: member.id });
     setChannels(member.channels);
     setOwnedChannels(channels);
     setFriends(friends);
