@@ -33,11 +33,11 @@ export default function Login() {
   };
 
   return (
-    <form className="p-4 w-[350px]" onSubmit={handleSubmit(onSubmit)}>
-      <fieldset className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4">
+    <form className="w-[350px] p-4" onSubmit={handleSubmit(onSubmit)}>
+      <fieldset className="mb-4 grid grid-cols-1 grid-rows-[auto,auto,20px]">
         <label
           htmlFor="username"
-          className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+          className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
         >
           Username
         </label>
@@ -45,10 +45,10 @@ export default function Login() {
         <Input variant="outline" size="md" {...register("username")} />
         {errors.username && <FormError error={errors.username.message} />}
       </fieldset>
-      <fieldset className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4">
+      <fieldset className="mb-4 grid grid-cols-1 grid-rows-[auto,auto,20px]">
         <label
           htmlFor="password"
-          className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+          className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
         >
           Password
         </label>
@@ -61,7 +61,7 @@ export default function Login() {
         />
         {errors.password && <FormError error={errors.password.message} />}
       </fieldset>
-      <Button className="px-8 py-[0.375rem] mb-2">Login</Button>
+      <Button className="mb-2 px-8 py-[0.375rem]">Login</Button>
     </form>
   );
 }

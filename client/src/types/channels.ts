@@ -1,5 +1,5 @@
 import { Channel, ChannelMessage, Member, User } from ".";
-import { Optional } from "./utility";
+import { Optional, Prettify } from "./utility";
 
 export type ChannelQueryResponse = Channel & {
   members: Sender[];
@@ -7,10 +7,12 @@ export type ChannelQueryResponse = Channel & {
   owner: User;
 };
 
-export type ChannelMessageWithStatus = ChannelMessage & {
-  sender: Sender;
-  status?: "pending" | "sent";
-};
+export type ChannelMessageWithStatus = Prettify<
+  ChannelMessage & {
+    sender: Sender;
+    status?: "pending" | "sent";
+  }
+>;
 
 export type Sender = {
   /** Sender id is member id when the message is a Channel Message. */
@@ -25,21 +27,21 @@ export type SendChannelMessagePayload = {
   messageContent: string;
 };
 
-export type FilteredChannelMessages = Omit<
-  ChannelMessageWithStatus,
-  "sender"
-> & {
-  senderName: string;
-  senderAvatar: string;
-};
-
-export type FilteredMessage = Optional<
-  FilteredChannelMessages,
-  "timestamp" | "channelId"
+export type FilteredChannelMessages = Prettify<
+  Omit<ChannelMessageWithStatus, "sender"> & {
+    senderName: string;
+    senderAvatar: string;
+  }
 >;
 
-export type CurrentChannel = Omit<ChannelQueryResponse, "messages"> & {
-  messages: FilteredMessage[];
-  members: Member[];
-  owner: User;
-};
+export type FilteredMessage = Prettify<
+  Optional<FilteredChannelMessages, "timestamp" | "channelId">
+>;
+
+export type CurrentChannel = Prettify<
+  Omit<ChannelQueryResponse, "messages"> & {
+    messages: FilteredMessage[];
+    members: Member[];
+    owner: User;
+  }
+>;

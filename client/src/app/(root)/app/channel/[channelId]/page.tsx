@@ -52,7 +52,7 @@ export default function Channel({ params: { channelId } }: Props) {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
+      <div className="flex h-screen flex-col">
         <Header channelName={channel.name} />
         <Chat className="flex-1" />
       </div>

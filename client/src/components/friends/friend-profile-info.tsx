@@ -8,7 +8,7 @@ import { useRecoilValue } from "recoil";
 import { SelectedFriend } from "@/lib/store";
 
 const RightInfoBar = dynamic(
-  () => import("@/components/shared/right-info-bar")
+  () => import("@/components/shared/right-info-bar"),
 );
 
 export default function FriendProfileInfo() {
@@ -16,37 +16,37 @@ export default function FriendProfileInfo() {
 
   if (!friend)
     return (
-      <RightInfoBar className="p-8 flex justify-center items-center text-center font-medium">
+      <RightInfoBar className="flex items-center justify-center p-8 text-center font-medium">
         Select a friend to view their profile.
       </RightInfoBar>
     );
 
   const { id, avatar, name, username, isActive, createdAt, email } = friend;
   return (
-    <RightInfoBar className="p-8 flex justify-center">
+    <RightInfoBar className="flex justify-center p-8">
       <div className="text-center">
         <Image
           src={avatar}
           alt="Profile Avatar"
           width={144}
           height={144}
-          className="rounded-full object-contain w-36 h-36 p-1 border border-border mx-auto"
+          className="mx-auto h-36 w-36 rounded-full border border-border object-contain p-1"
         />
-        <div className="text-lg font-semibold mt-2">{name}</div>
-        <div className="font-semibold text-success text-sm leading-3 px-[0.375rem] py-[1px] inline-block">
+        <div className="mt-2 text-lg font-semibold">{name}</div>
+        <div className="inline-block px-[0.375rem] py-[1px] text-sm font-semibold leading-3 text-success">
           <span>&#x2022;</span> Online
         </div>
       </div>
 
-      <div className="flex mt-2">
+      <div className="mt-2 flex">
         <InfoCircle size={18} className="mr-4 text-foreground-secondary" />
         <div>
           <div className="mb-2">
-            <div className="text-foreground-secondary text-xs">Username</div>
+            <div className="text-xs text-foreground-secondary">Username</div>
             <div className="text-xs font-medium">@{username}</div>
           </div>
           <div className="mb-2">
-            <div className="text-foreground-secondary text-xs">Email</div>
+            <div className="text-xs text-foreground-secondary">Email</div>
             <div className="text-xs font-medium">{email}</div>
           </div>
           {/* <div className="mb-2">
@@ -54,7 +54,7 @@ export default function FriendProfileInfo() {
               <div className="text-xs font-medium">+213 234567890</div>
             </div> */}
           <div className="mb-2">
-            <div className="text-foreground-secondary text-xs">
+            <div className="text-xs text-foreground-secondary">
               Member since
             </div>
             <div className="text-xs font-medium">{formatDate(createdAt)}</div>
@@ -62,7 +62,7 @@ export default function FriendProfileInfo() {
         </div>
       </div>
 
-      <div className="flex mt-2">
+      <div className="mt-2 flex">
         <BurgerMenu size={18} className="mr-4 text-foreground-secondary" />
         <div>
           <div className="flex flex-col gap-1">
@@ -75,7 +75,7 @@ export default function FriendProfileInfo() {
             <button className="text-left text-xs font-medium hover:text-strong-foreground hover:underline">
               Remove friend
             </button>
-            <button className="text-left text-xs font-medium text-danger hover:danger-secondary hover:underline">
+            <button className="hover:danger-secondary text-left text-xs font-medium text-danger hover:underline">
               Block user
             </button>
           </div>

@@ -10,7 +10,7 @@ async function login({
     {
       method: "POST",
       credentials: "include",
-    }
+    },
   );
 
   const data = await response.json();

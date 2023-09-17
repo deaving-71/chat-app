@@ -6,6 +6,6 @@ export default function BlackCover() {
   const { isSidebarOpen, isRightinfobarOpen } = useSidebarContext();
 
   return isSidebarOpen || isRightinfobarOpen ? (
-    <div className="lg:hidden block absolute top-0 left-0 bg-black/40 z-40 w-full h-[100vh]"></div>
+    <div className="absolute left-0 top-0 z-40 block h-[100vh] w-full bg-black/40 lg:hidden"></div>
   ) : null;
 }

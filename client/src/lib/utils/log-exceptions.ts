@@ -3,7 +3,7 @@ type NormalFunction = (...args: any[]) => any;
 
 const logExceptions = async (
   fn: AsyncFunction | NormalFunction,
-  onError?: AsyncFunction | NormalFunction
+  onError?: AsyncFunction | NormalFunction,
 ) => {
   try {
     await fn();

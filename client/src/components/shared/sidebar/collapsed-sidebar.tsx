@@ -14,11 +14,11 @@ export default function CollapsedSidebar() {
   const user = useRecoilValue(User);
 
   return (
-    <aside className="w-[80px] row-span-2 border-r border-border sticky top-0 left-0 h-screen overflow-y-auto">
-      <div className="h-[60px] p-4 border-b border-border text-center">
+    <aside className="sticky left-0 top-0 row-span-2 h-screen w-[80px] overflow-y-auto border-r border-border">
+      <div className="h-[60px] border-b border-border p-4 text-center">
         <Button
           variant="squared"
-          className="p-1 rotate-180"
+          className="rotate-180 p-1"
           onClick={toggleSidebar}
         >
           <Arrow size={24} />
@@ -31,7 +31,7 @@ export default function CollapsedSidebar() {
           alt="Profile Avatar"
           width={48}
           height={48}
-          className="rounded-full object-contain w-12 h-12"
+          className="h-12 w-12 rounded-full object-contain"
         />
       </div>
 
@@ -42,7 +42,7 @@ export default function CollapsedSidebar() {
             <li key={title + idx}>
               <Link
                 href={href}
-                className="flex items-center justify-center py-4 hover:bg-muted transition-all"
+                className="flex items-center justify-center py-4 transition-all hover:bg-muted"
               >
                 <Icon size={24} />
               </Link>
@@ -50,9 +50,9 @@ export default function CollapsedSidebar() {
           ))}
         </ul>
 
-        <div className="h-[1px] w-[calc(100%-1rem)] bg-muted mx-auto my-2" />
+        <div className="mx-auto my-2 h-[1px] w-[calc(100%-1rem)] bg-muted" />
         <div>
-          <div className="flex items-center justify-center py-4 hover:bg-muted transition-all cursor-pointer">
+          <div className="flex cursor-pointer items-center justify-center py-4 transition-all hover:bg-muted">
             <Hashtag size={24} />
             {/* <button className="p-[0.125rem] hover:bg-muted transition-all rounded-full">
               <Plus size={20} />

@@ -13,8 +13,8 @@ export default function RootHeader({ children, className, ...props }: Props) {
   const lg = useMediaQuery("(min-width: 1024px)");
 
   return (
-    <header className="h-header border-boder border-b lg:px-8 px-4">
-      <div className="flex items-center h-full">
+    <header className="border-boder h-header border-b px-4 lg:px-8">
+      <div className="flex h-full items-center">
         {lg ? null : (
           <Button
             variant="circular"

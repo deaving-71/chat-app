@@ -94,7 +94,6 @@ const SocketContextProvider = ({ children }: Props) => {
 
       if (prev.ownerId === data.id) {
         const owner = { ...prev.owner, isActive: data.isActive };
-        console.log(owner.isActive);
         return { ...prev, owner };
       }
       const updatedMemberList = prev.members.map((member) => {

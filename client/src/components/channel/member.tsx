@@ -10,20 +10,20 @@ type Props = {
 
 export default function Member({ name, status }: Props) {
   return (
-    <li className="flex gap-1 w-full p-1 hover:bg-muted transition-all group px-4">
-      <div className="relative rounded-full w-8 h-8 mr-2">
+    <li className="group flex w-full gap-1 p-1 px-4 transition-all hover:bg-muted">
+      <div className="relative mr-2 h-8 w-8 rounded-full">
         <Image
           src={"/assets/default_avatar.png"}
           alt="Profile Avatar"
           width={32}
           height={32}
-          className="rounded-full object-contain w-8 h-8 inline-block"
+          className="inline-block h-8 w-8 rounded-full object-contain"
         />
         <StatusDot status={status} />
       </div>
 
       <div className="flex w-full items-center justify-between">
-        <div className="font-medium text-sm">{name}</div>
+        <div className="text-sm font-medium">{name}</div>
         <button className="invisible group-hover:visible">
           <ThreeDots />
         </button>

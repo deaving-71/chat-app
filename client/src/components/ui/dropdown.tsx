@@ -18,7 +18,7 @@ export function Dropdown({ children }: Props) {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="bg-white border-border border shadow-lg p-2 rounded-md text-sm font-medium ">
+        <DropdownMenu.Content className="rounded-md border border-border bg-white p-2 text-sm font-medium shadow-lg ">
           {children}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

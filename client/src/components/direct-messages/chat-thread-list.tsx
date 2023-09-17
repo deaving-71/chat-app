@@ -40,22 +40,22 @@ export default function ChatThreadList({ conversations }: Props) {
             <li key={id}>
               <Link
                 href={`/app/direct-messages/${id}`}
-                className="flex gap-2 p-1 hover:bg-muted transition-all group"
+                className="group flex gap-2 p-1 transition-all hover:bg-muted"
               >
-                <div className="relative rounded-full w-8 h-8">
+                <div className="relative h-8 w-8 rounded-full">
                   <Image
                     src={repartee.avatar}
                     alt="Profile Avatar"
                     width={32}
                     height={32}
-                    className="rounded-full object-contain w-8 h-8 inline-block"
+                    className="inline-block h-8 w-8 rounded-full object-contain"
                   />
                   <StatusDot status={repartee.isActive} />
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="align-middle">
-                      <span className="font-medium mr-2 text-sm">
+                      <span className="mr-2 text-sm font-medium">
                         {repartee.name}
                       </span>
                       <span className="text-xs text-foreground-secondary">
@@ -66,14 +66,14 @@ export default function ChatThreadList({ conversations }: Props) {
                       <ThreeDots />
                     </button>
                   </div>
-                  <p className="block text-xs text-foreground-secondary h-5 truncate w-[186px]">
+                  <p className="block h-5 w-[186px] truncate text-xs text-foreground-secondary">
                     {lastMessage.content}
                   </p>
                 </div>
               </Link>
             </li>
           );
-        }
+        },
       )}
     </ul>
   );

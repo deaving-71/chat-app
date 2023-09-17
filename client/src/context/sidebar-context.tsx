@@ -13,7 +13,7 @@ const useSidebarContext = () => {
   const context = useContext(SidebarContext);
   if (!context)
     throw new Error(
-      "useSidebarContext must be used with a SidebarContextProvider"
+      "useSidebarContext must be used with a SidebarContextProvider",
     );
 
   return context;

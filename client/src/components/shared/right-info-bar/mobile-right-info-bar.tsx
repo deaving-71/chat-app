@@ -33,7 +33,7 @@ export default function MobileRightInfoBar({
       variants={variants}
       transition={{ duration: 0.2 }}
       {...props}
-      className="w-[240px] bg-background border-l border-border absolute top-0 right-0 overflow-y-auto h-screen z-[50]"
+      className="absolute right-0 top-0 z-[50] h-screen w-[240px] overflow-y-auto border-l border-border bg-background"
     >
       <div className="p-4">
         <Button variant="squared" size="sm" onClick={toggleRightinfobar}>

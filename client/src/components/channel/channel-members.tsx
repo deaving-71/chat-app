@@ -11,13 +11,13 @@ export default function ChannelMembers() {
 
   const [onlineMembers, offlineMembers] = filterMembers(
     currentChannel.members,
-    currentChannel.ownerId
+    currentChannel.ownerId,
   );
 
   return (
-    <ul className="flex flex-col gap-4 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto">
+    <ul className="flex max-h-[calc(100dvh-var(--header-height))] flex-col gap-4 overflow-y-auto">
       <div>
-        <h2 className="font-semibold px-2">Owner</h2>
+        <h2 className="px-2 font-semibold">Owner</h2>
         <Member
           key={currentChannel.ownerId}
           name={currentChannel.owner.name}
@@ -25,7 +25,7 @@ export default function ChannelMembers() {
         />
       </div>
       <div>
-        <h2 className="font-semibold px-2">Online - {onlineMembers.length}</h2>
+        <h2 className="px-2 font-semibold">Online - {onlineMembers.length}</h2>
         {onlineMembers.map((member) => (
           <Member
             key={member.id}
@@ -35,7 +35,7 @@ export default function ChannelMembers() {
         ))}
       </div>
       <div>
-        <h2 className="font-semibold px-2">Offline {offlineMembers.length}</h2>
+        <h2 className="px-2 font-semibold">Offline {offlineMembers.length}</h2>
         {offlineMembers.map((member) => (
           <Member
             key={member.id}

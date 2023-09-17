@@ -24,7 +24,7 @@ export default function AppLayout({ children }: Props) {
   return (
     <SocketContextProvider>
       <BlackCover />
-      <div className="lg:grid grid-cols-[auto,1fr] grid-rows-1 min-h-screen h-full">
+      <div className="h-full min-h-screen grid-cols-[auto,1fr] grid-rows-1 lg:grid">
         <Sidebar />
         {children}
       </div>

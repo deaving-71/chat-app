@@ -21,8 +21,8 @@ export default function Messages({ messages }: Props) {
       <div
         key={id}
         className={cn(
-          "flex px-8 py-2 hover:bg-muted transition-all group",
-          status && status === "pending" ? "opacity-60" : "opacity-100"
+          "group flex px-8 py-2 transition-all hover:bg-muted",
+          status && status === "pending" ? "opacity-60" : "opacity-100",
         )}
       >
         <Image
@@ -30,12 +30,12 @@ export default function Messages({ messages }: Props) {
           alt="Profile Avatar"
           width={36}
           height={36}
-          className="rounded-full object-contain mr-4 w-9 h-9 inline-block"
+          className="mr-4 inline-block h-9 w-9 rounded-full object-contain"
         />
         <div className="w-full">
           <div className="flex items-center justify-between">
             <div className="align-middle">
-              <span className="font-medium mr-2">{senderName}</span>
+              <span className="mr-2 font-medium">{senderName}</span>
               <span className="text-xs text-foreground-secondary">
                 {timestamp && lastMessageTimestamp(timestamp)}
               </span>
@@ -47,6 +47,6 @@ export default function Messages({ messages }: Props) {
           <p className="block text-sm text-foreground-secondary">{content}</p>
         </div>
       </div>
-    )
+    ),
   );
 }

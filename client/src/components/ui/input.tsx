@@ -34,7 +34,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       className={cn(inputVariants({ variant, size, className }))}
       {...props}
     />
-  )
+  ),
 );
 
 export { Input, inputVariants };

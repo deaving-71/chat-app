@@ -12,8 +12,8 @@ export default function DefaultRightInfoBar({ className, ...props }: Props) {
       {...props}
       className={cn(
         className,
-        "w-[240px] row-span-2 border-l border-border sticky top-0 right-0 overflow-y-auto max-h-screen overflow-x-hidden",
-        isRightinfobarOpen ? "" : "hidden"
+        "sticky right-0 top-0 row-span-2 max-h-screen w-[240px] overflow-y-auto overflow-x-hidden border-l border-border",
+        isRightinfobarOpen ? "" : "hidden",
       )}
     ></aside>
   );

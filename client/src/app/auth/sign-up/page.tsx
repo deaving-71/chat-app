@@ -35,12 +35,12 @@ export default function Signup() {
   };
 
   return (
-    <form className="p-4 w-[550px]" onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-[550px] p-4" onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="flex gap-2">
-        <div className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4 basis-1/2">
+        <div className="mb-4 grid basis-1/2 grid-cols-1 grid-rows-[auto,auto,20px]">
           <label
             htmlFor="username"
-            className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+            className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
           >
             Username
           </label>
@@ -48,10 +48,10 @@ export default function Signup() {
           <Input variant="outline" size="md" {...register("username")} />
           {errors.username && <FormError error={errors.username.message} />}
         </div>
-        <div className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4 basis-1/2">
+        <div className="mb-4 grid basis-1/2 grid-cols-1 grid-rows-[auto,auto,20px]">
           <label
             htmlFor="name"
-            className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+            className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
           >
             Name
           </label>
@@ -61,10 +61,10 @@ export default function Signup() {
         </div>
       </fieldset>
 
-      <fieldset className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4">
+      <fieldset className="mb-4 grid grid-cols-1 grid-rows-[auto,auto,20px]">
         <label
           htmlFor="email"
-          className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+          className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
         >
           Email
         </label>
@@ -76,10 +76,10 @@ export default function Signup() {
         />
         {errors.email && <FormError error={errors.email.message} />}
       </fieldset>
-      <fieldset className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4">
+      <fieldset className="mb-4 grid grid-cols-1 grid-rows-[auto,auto,20px]">
         <label
           htmlFor="password"
-          className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+          className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
         >
           Password
         </label>
@@ -92,10 +92,10 @@ export default function Signup() {
         />
         {errors.password && <FormError error={errors.password.message} />}
       </fieldset>
-      <fieldset className="grid grid-cols-1 grid-rows-[auto,auto,20px] mb-4">
+      <fieldset className="mb-4 grid grid-cols-1 grid-rows-[auto,auto,20px]">
         <label
           htmlFor="confirm_password"
-          className="text-[0.8125rem] leading-[1] mb-[0.625rem] block"
+          className="mb-[0.625rem] block text-[0.8125rem] leading-[1]"
         >
           Confirm Password
         </label>
@@ -111,7 +111,7 @@ export default function Signup() {
         )}
       </fieldset>
 
-      <Button className="px-8 py-[0.375rem] mb-2">Join in</Button>
+      <Button className="mb-2 px-8 py-[0.375rem]">Join in</Button>
     </form>
   );
 }

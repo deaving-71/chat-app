@@ -25,14 +25,14 @@ export default function AuthLayout({ children }: Props) {
   }, [session?.status]);
 
   return (
-    <main className="flex items-center justify-center from-secondary to-primary bg-gradient-to-tl text-foreground min-h-screen h-full">
-      <div className="bg-background rounded-lg shadow-[_10px_10px_30px_var(--background)] overflow-hidden">
-        <div className="flex font-medium border-b border-[rgb(var(--primary)/0.2)]">
+    <main className="flex h-full min-h-screen items-center justify-center bg-gradient-to-tl from-secondary to-primary text-foreground">
+      <div className="overflow-hidden rounded-lg bg-background shadow-[_10px_10px_30px_var(--background)]">
+        <div className="flex border-b border-[rgb(var(--primary)/0.2)] font-medium">
           <Link
             href="/auth/login"
             className={cn(
-              "basis-1/2 text-center w-full p-2 border-primary transition-all",
-              routeName === "login" ? "border-b-2" : "hover:bg-muted"
+              "w-full basis-1/2 border-primary p-2 text-center transition-all",
+              routeName === "login" ? "border-b-2" : "hover:bg-muted",
             )}
           >
             Sign in
@@ -40,8 +40,8 @@ export default function AuthLayout({ children }: Props) {
           <Link
             href="/auth/sign-up"
             className={cn(
-              "basis-1/2 text-center w-full p-2 transition-all border-primary",
-              routeName === "sign-up" ? "border-b-2" : "hover:bg-muted"
+              "w-full basis-1/2 border-primary p-2 text-center transition-all",
+              routeName === "sign-up" ? "border-b-2" : "hover:bg-muted",
             )}
           >
             Sign up

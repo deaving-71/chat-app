@@ -27,7 +27,7 @@ const SelectedFriend = selector<User | null>({
     const selectedFriendId = get(SelectedFriendId);
     const friends = get(Friends);
     const selectedFriendProfile = friends.find(
-      (friend) => friend.id === selectedFriendId
+      (friend) => friend.id === selectedFriendId,
     );
     if (!selectedFriendProfile) return null;
     return selectedFriendProfile;

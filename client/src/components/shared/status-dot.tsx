@@ -7,8 +7,8 @@ export default function StatusDot({ status }: Props) {
   return (
     <span
       className={cn(
-        "w-2 h-2 rounded-full absolute -bottom-[0.125rem] right-[0.125rem]",
-        status ? "bg-success" : "bg-offline"
+        "absolute -bottom-[0.125rem] right-[0.125rem] h-2 w-2 rounded-full",
+        status ? "bg-success" : "bg-offline",
       )}
     />
   );

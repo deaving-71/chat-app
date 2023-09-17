@@ -72,7 +72,7 @@ export default function Chat({ className }: Props) {
             status: "sent",
             timestamp: data.timestamp,
           },
-          generatedId
+          generatedId,
         );
       } else {
         console.error(message);
@@ -89,7 +89,7 @@ export default function Chat({ className }: Props) {
       <form className="relative" onSubmit={(e) => sendMessage(e)}>
         <Input
           ref={inputRef}
-          className="border-t w-full h-input"
+          className="h-input w-full border-t"
           placeholder="Write a message"
         />
         <button className="absolute right-4 top-4">
