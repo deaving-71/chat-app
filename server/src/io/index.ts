@@ -12,7 +12,7 @@ import {
 const initilizeSocketIO = (app: FastifyInstance) => {
   function onConnection(socket: Socket) {
     console.log(`${socket.data.username} has connected with id: ${socket.id}`);
-
+    
     handleOnConnection(socket);
     registerFriendsHandler(app, socket);
     registerConversationHandler(app, socket);

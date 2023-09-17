@@ -8,6 +8,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { getChannel } from "@/lib/actions";
 import { filterChannelMessages } from "@/lib/utils";
 import { useEffect } from "react";
+import { useSocket } from "@/context";
 
 type Props = {
   params: { channelId: string };
@@ -15,6 +16,7 @@ type Props = {
 
 export default function Channel({ params: { channelId } }: Props) {
   const setCurrentChannel = useSetRecoilState(CurrentChannel);
+  const { isConnected } = useSocket();
   const user = useRecoilValue(User);
   const {
     data: channel,
@@ -25,7 +27,8 @@ export default function Channel({ params: { channelId } }: Props) {
   } = useQuery({
     queryKey: ["channel", channelId],
     queryFn: () => getChannel(channelId),
-    enabled: !!user,
+    enabled: !!user && isConnected,
+    refetchInterval: 1000 * 60 * 5,
   });
 
   useEffect(() => {
@@ -35,6 +38,10 @@ export default function Channel({ params: { channelId } }: Props) {
         messages: filterChannelMessages(channel.messages),
       });
     }
+
+    return () => {
+      setCurrentChannel(null);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel?.id, isSuccess]);
 
@@ -43,7 +50,6 @@ export default function Channel({ params: { channelId } }: Props) {
   if (!channel)
     return <div>error while trying to get this channel&apos;s records </div>;
 
-  console.log(channel);
   return (
     <>
       <div className="flex flex-col h-screen">

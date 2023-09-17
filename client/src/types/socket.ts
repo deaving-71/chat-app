@@ -1,7 +1,7 @@
 export type SocketData = {
   id: string;
   username: string;
-  memeberId: string;
+  memberId: string;
 };
 
 export type AcknowledgementCallback<T> = (

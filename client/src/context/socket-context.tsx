@@ -59,12 +59,14 @@ const SocketContextProvider = ({ children }: Props) => {
 
       return {
         ...prev,
-        messages,
+        messages: messages,
       };
     });
   }
 
   function ReceiveChannelMessage(message: ChannelMessageWithStatus) {
+    if (message.senderId === user?.memberId) return;
+    if (message.channelId !== currentChannel?.id) return;
     const {
       sender: {
         user: { avatar, name },
@@ -86,6 +88,25 @@ const SocketContextProvider = ({ children }: Props) => {
         }
         return friend;
       });
+    });
+    setCurrentChannel((prev) => {
+      if (!prev) return null;
+
+      if (prev.ownerId === data.id) {
+        const owner = { ...prev.owner, isActive: data.isActive };
+        console.log(owner.isActive);
+        return { ...prev, owner };
+      }
+      const updatedMemberList = prev.members.map((member) => {
+        console.log(member, data);
+        if (member.id === data.memberId) {
+          const user = { ...member.user, isActive: data.isActive };
+          const updatedMember = { ...member, user: user };
+          return updatedMember;
+        }
+        return member;
+      });
+      return { ...prev, members: updatedMemberList };
     });
   }
 
@@ -114,11 +135,11 @@ const SocketContextProvider = ({ children }: Props) => {
       socket?.off("connect");
       socket?.off("disconnect");
       socket?.off("user:status");
+      socket?.off("channel:received-message");
       socket?.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.status, user?.id]);
-
   return (
     <SocketContext.Provider
       value={{
