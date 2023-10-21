@@ -11,7 +11,11 @@ export {
   BsFillSendFill as SendFill,
 } from "react-icons/bs";
 export { AiFillMessage as Message } from "react-icons/ai";
-export { RxDotsHorizontal as ThreeDots } from "react-icons/rx";
+export {
+  RxDotsHorizontal as ThreeDots,
+  RxCross2 as XmarkRX,
+  RxCheck as CheckMark,
+} from "react-icons/rx";
 export { CgInbox as InboxIcon } from "react-icons/cg";
 export { TfiMenu as BurgerMenu } from "react-icons/tfi";
 export { FaXmark as Xmark } from "react-icons/fa6";

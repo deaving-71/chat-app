@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
+import React from "react";
 
 const buttonVariants = cva("transition-all font-medium", {
   variants: {
@@ -24,16 +25,22 @@ const buttonVariants = cva("transition-all font-medium", {
   },
 });
 
-type Props = React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>;
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
 
-function Button({ variant, size, className, ...props }: Props) {
-  return (
-    <button
-      {...props}
-      className={cn(buttonVariants({ variant, size, className }))}
-    ></button>
-  );
-}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      ></button>
+    );
+  },
+);
+
+Button.displayName = "Button";
 
 export { Button, buttonVariants };

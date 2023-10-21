@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
-import { forwardRef } from "react";
+import React from "react";
 
 const inputVariants = cva("outline-none transition-all", {
   variants: {
@@ -23,18 +23,22 @@ const inputVariants = cva("outline-none transition-all", {
   },
 });
 
-type InputProps = React.ComponentProps<"input"> &
-  VariantProps<typeof inputVariants>;
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement>,
+    VariantProps<typeof inputVariants> {}
 
-// eslint-disable-next-line react/display-name
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, size = "default", ...props }, ref) => (
-    <input
-      ref={ref}
-      className={cn(inputVariants({ variant, size, className }))}
-      {...props}
-    />
-  ),
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <input
+        className={cn(inputVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
 );
+
+Input.displayName = "Input";
 
 export { Input, inputVariants };

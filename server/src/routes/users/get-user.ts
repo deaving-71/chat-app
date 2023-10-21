@@ -9,8 +9,16 @@ const getUser: RouteHandler = async (request, response) => {
     include: {
       channels: true,
       friends: true,
-      friendRequestSent: true,
-      friendRequestReceived: true,
+      friendRequestSent: {
+        include: {
+          receiver: true,
+        },
+      },
+      friendRequestReceived: {
+        include: {
+          sender: true,
+        },
+      },
       member: {
         select: {
           id: true,
@@ -21,7 +29,7 @@ const getUser: RouteHandler = async (request, response) => {
   });
   if (!user)
     return response.badRequest({
-      message: "Could not fetch user.",
+      message: "User does not exist.",
     });
   const { password, ...User } = user;
   return response.ok(User);

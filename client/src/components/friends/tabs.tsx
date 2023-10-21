@@ -1,3 +1,4 @@
+import { AddFriend } from ".";
 import { Button } from "../ui/";
 
 export default function Tabs() {
@@ -8,7 +9,7 @@ export default function Tabs() {
           <Button key={tab + idx}>{tab}</Button>
         ))}
       </div>
-      <Button>Add Friend</Button>
+      <AddFriend />
     </div>
   );
 }

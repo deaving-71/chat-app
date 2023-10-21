@@ -1,7 +1,19 @@
 "use client";
 
-import { CurrentChannel, Friends, Session, User } from "@/lib/store";
-import { ChannelMessageWithStatus, FilteredMessage, SocketData } from "@/types";
+import {
+  CurrentChannel,
+  FriendRequestsReceived,
+  FriendRequestsSent,
+  Friends,
+  Session,
+  User,
+} from "@/lib/store";
+import {
+  ChannelMessageWithStatus,
+  FilteredMessage,
+  FriendRequestSent,
+  SocketData,
+} from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Socket, io as ClientIO } from "socket.io-client";
@@ -11,6 +23,7 @@ type SocketContext = {
   socket: Socket | null;
   appendChannelMessage: (message: FilteredMessage) => void;
   updateChannelMessage: (message: FilteredMessage, messageId: string) => void;
+  updateFriendRequestsSent: (FriendRequest: FriendRequestSent) => void;
 };
 
 const SocketContext = createContext<SocketContext | null>(null);
@@ -33,6 +46,8 @@ const SocketContextProvider = ({ children }: Props) => {
   const session = useRecoilValue(Session);
   const user = useRecoilValue(User);
   const setFriends = useSetRecoilState(Friends);
+  const setFriendRequestsReceived = useSetRecoilState(FriendRequestsReceived);
+  const setFriendRequestsSents = useSetRecoilState(FriendRequestsSent);
   const [currentChannel, setCurrentChannel] = useRecoilState(CurrentChannel);
 
   const onConnect = () => setIsConnected(true);
@@ -78,6 +93,10 @@ const SocketContextProvider = ({ children }: Props) => {
       senderAvatar: avatar,
       senderName: name,
     });
+  }
+
+  function updateFriendRequestsSent(FriendRequest: FriendRequestSent) {
+    setFriendRequestsSents((prev) => [...prev, FriendRequest]);
   }
 
   function handleUserStatus(data: SocketData & { isActive: boolean }) {
@@ -146,6 +165,7 @@ const SocketContextProvider = ({ children }: Props) => {
         socket,
         appendChannelMessage,
         updateChannelMessage,
+        updateFriendRequestsSent,
       }}
     >
       {children}

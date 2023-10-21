@@ -4,4 +4,4 @@ export { default as RightInfoBar } from "./right-info-bar";
 export { default as Chat } from "./chat";
 export { default as StatusDot } from "./status-dot";
 export { default as BlackCover } from "./black-cover";
-export { default as FormError } from "./form-error";
+export { FormError, FormSuccess } from "./form-alert";

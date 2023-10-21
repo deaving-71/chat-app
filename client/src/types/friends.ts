@@ -7,3 +7,8 @@ export type FriendRequestReceived = FriendRequest & {
 export type FriendRequestSent = FriendRequest & {
   receiver: User;
 };
+
+export type FriendRequestQueryResponse = FriendRequest & {
+  sender: User;
+  receiver: User;
+};

@@ -43,7 +43,7 @@ export default function Login() {
         </label>
         {/* @ts-ignore >>> typescript bug */}
         <Input variant="outline" size="md" {...register("username")} />
-        {errors.username && <FormError error={errors.username.message} />}
+        <FormError message={errors.username?.message ?? ""} />
       </fieldset>
       <fieldset className="mb-4 grid grid-cols-1 grid-rows-[auto,auto,20px]">
         <label
@@ -59,7 +59,7 @@ export default function Login() {
           type="password"
           {...register("password")}
         />
-        {errors.password && <FormError error={errors.password.message} />}
+        <FormError message={errors.password?.message ?? ""} />
       </fieldset>
       <Button className="mb-2 px-8 py-[0.375rem]">Login</Button>
     </form>

@@ -23,11 +23,17 @@ export default function AppLayout({ children }: Props) {
 
   return (
     <SocketContextProvider>
-      <BlackCover />
-      <div className="h-full min-h-screen grid-cols-[auto,1fr] grid-rows-1 lg:grid">
-        <Sidebar />
-        {children}
-      </div>
+      {session?.status === "loading" ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <BlackCover />
+          <div className="h-full min-h-screen grid-cols-[auto,1fr] grid-rows-1 lg:grid">
+            <Sidebar />
+            {children}
+          </div>
+        </>
+      )}
     </SocketContextProvider>
   );
 }

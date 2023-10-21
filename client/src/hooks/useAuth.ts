@@ -42,6 +42,8 @@ function useAuth() {
       member,
       ...User
     } = data;
+      console.log("friendRequestSent: ", friendRequestSent);
+
 
     setUser({ ...User, memberId: member.id });
     setChannels(member.channels);
