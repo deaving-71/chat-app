@@ -23,7 +23,7 @@ export default function FriendProfileInfo() {
 
   const { id, avatar, name, username, isActive, createdAt, email } = friend;
   return (
-    <RightInfoBar className="flex justify-center p-8">
+    <RightInfoBar className="flex flex-col p-8">
       <div className="text-center">
         <Image
           src={avatar}

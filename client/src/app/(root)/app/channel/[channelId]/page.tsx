@@ -2,7 +2,7 @@
 
 import { Header, Members } from "@/components/channel";
 import { Chat } from "@/components/shared";
-import { CurrentChannel, User } from "@/lib/store";
+import { CurrentChannel, userAtom } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { getChannel } from "@/lib/actions";
@@ -17,7 +17,7 @@ type Props = {
 export default function Channel({ params: { channelId } }: Props) {
   const setCurrentChannel = useSetRecoilState(CurrentChannel);
   const { isConnected } = useSocket();
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
   const {
     data: channel,
     isLoading,

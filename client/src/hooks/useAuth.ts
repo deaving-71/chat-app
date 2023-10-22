@@ -6,7 +6,7 @@ import {
   OwnedChannels,
   Session,
   Channels,
-  User,
+  userAtom,
 } from "@/lib/store";
 import { LoginCredentials, SignInOptions, UserProfileInfo } from "@/types";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import { useSetRecoilState } from "recoil";
 
 function useAuth() {
   const setSession = useSetRecoilState(Session);
-  const setUser = useSetRecoilState(User);
+  const setUser = useSetRecoilState(userAtom);
   const setChannels = useSetRecoilState(Channels);
   const setOwnedChannels = useSetRecoilState(OwnedChannels);
   const setFriends = useSetRecoilState(Friends);
@@ -42,8 +42,6 @@ function useAuth() {
       member,
       ...User
     } = data;
-      console.log("friendRequestSent: ", friendRequestSent);
-
 
     setUser({ ...User, memberId: member.id });
     setChannels(member.channels);

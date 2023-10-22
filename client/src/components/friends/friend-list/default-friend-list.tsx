@@ -16,15 +16,21 @@ export default function DefaultFriendsList() {
       {friends.map((friend) => (
         <FriendListItem key={friend.id} {...friend} />
       ))}
-      {friendRequestsSent.map(({ receiver }) => (
+      {friendRequestsSent.map(({ id, receiver }) => (
         <FriendListItem
           key={receiver.id}
-          {...receiver}
+          requestId={id}
           requestType="outgoing"
+          {...receiver}
         />
       ))}
-      {friendRequestsReceived.map(({ sender }) => (
-        <FriendListItem key={sender.id} {...sender} requestType="incoming" />
+      {friendRequestsReceived.map(({ sender, id }) => (
+        <FriendListItem
+          key={sender.id}
+          requestId={id}
+          requestType="incoming"
+          {...sender}
+        />
       ))}
     </ul>
   );

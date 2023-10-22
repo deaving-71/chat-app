@@ -6,7 +6,7 @@ import StatusDot from "../shared/status-dot";
 import { ThreeDots } from "@/lib/utils/icons";
 import { MyConversation } from "@/types";
 import { useRecoilValue } from "recoil";
-import { User } from "@/lib/store";
+import { userAtom } from "@/lib/store";
 import { lastMessageTimestamp } from "@/lib/utils";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function ChatThreadList({ conversations }: Props) {
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
 
   return (
     <ul className="max-h-[calc(100dvh-var(--header-height))] overflow-y-auto">

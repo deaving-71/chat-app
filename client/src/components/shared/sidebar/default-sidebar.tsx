@@ -7,11 +7,11 @@ import Image from "next/image";
 import { Button } from "../../ui";
 import { useSidebarContext } from "@/context";
 import { useRecoilValue } from "recoil";
-import { Channels, User } from "@/lib/store";
+import { Channels, userAtom } from "@/lib/store";
 
 export default function DefaultSidebar() {
   const { toggleSidebar } = useSidebarContext();
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
   const channels = useRecoilValue(Channels);
 
   return (

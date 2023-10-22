@@ -7,11 +7,11 @@ import Image from "next/image";
 import { Button } from "../../ui";
 import { useSidebarContext } from "@/context";
 import { useRecoilValue } from "recoil";
-import { User } from "@/lib/store";
+import { userAtom } from "@/lib/store";
 
 export default function CollapsedSidebar() {
   const { toggleSidebar } = useSidebarContext();
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
 
   return (
     <aside className="sticky left-0 top-0 row-span-2 h-screen w-[80px] overflow-y-auto border-r border-border">

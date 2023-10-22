@@ -6,3 +6,4 @@ export { default as getProfile } from "./user/get-profile";
 export { default as getMyConversations } from "./conversations/get-my-conversations";
 export { default as getConversation } from "./conversations/get-conversation";
 export { default as getChannel } from "./channel/get-channel";
+export { default as ack } from "./socket/ack";

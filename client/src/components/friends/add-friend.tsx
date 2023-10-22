@@ -30,29 +30,24 @@ function AddFriend() {
       username: "",
     },
   });
-  const { socket, updateFriendRequestsSent } = useSocket();
+  const { socket, appendFriendRequestsSent } = useSocket();
   const [formSuccessMsg, setFormSuccessMsg] = useState<null | string>(null);
   const onSubmit: SubmitHandler<TForm> = (data) => {
     try {
-      console.log(data);
-
       const ack: AcknowledgementCallback<FriendRequestQueryResponse> = ({
         data,
         message,
         success,
       }) => {
         if (success) {
-          console.log(message);
           setFormSuccessMsg(message);
-          updateFriendRequestsSent({
+          appendFriendRequestsSent({
             id: data.id,
             receiver: data.receiver,
             receiverId: data.receiverId,
             senderId: data.senderId,
           });
-          console.log(data);
         } else {
-          console.log(message);
           setError("username", { message });
         }
       };

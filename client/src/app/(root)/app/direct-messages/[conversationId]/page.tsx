@@ -3,7 +3,7 @@
 import { Header, Inbox } from "@/components/direct-messages";
 import { Chat } from "@/components/shared";
 import { getConversation } from "@/lib/actions";
-import { User } from "@/lib/store";
+import { userAtom } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default function Conversation({ params: { conversationId } }: Props) {
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
   const {
     data: conversation,
     isError,

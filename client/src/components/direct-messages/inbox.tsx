@@ -7,10 +7,10 @@ import { RightInfoBar } from "../shared";
 import { useQuery } from "@tanstack/react-query";
 import { getMyConversations } from "@/lib/actions";
 import { useRecoilValue } from "recoil";
-import { User } from "@/lib/store";
+import { userAtom } from "@/lib/store";
 
 export default function Inbox() {
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
   const {
     data: conversations,
     isError,

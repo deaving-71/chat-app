@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { Session, User } from "../store";
+import { Session, userAtom } from "../store";
 import { useAuth } from "@/hooks";
 import { getProfile } from "../actions";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ function AuthProvider({
   interval = 1000 * 60 * 14,
 }: AuthProviderProps) {
   const session = useRecoilValue(Session);
-  const user = useRecoilValue(User); // todo: remove this later
+  const user = useRecoilValue(userAtom); // todo: remove this later
   const { refreshAccess, setUserProfile } = useAuth();
   const { status } = useQuery({
     queryKey: ["refreshAccess"],

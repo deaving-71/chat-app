@@ -9,7 +9,7 @@ import {
 } from "@/types";
 import { useRef } from "react";
 import { useRecoilValue } from "recoil";
-import { CurrentChannel, User } from "@/lib/store";
+import { CurrentChannel, userAtom } from "@/lib/store";
 import { Messages } from "../channel";
 import { useSocket } from "@/context";
 
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function Chat({ className }: Props) {
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
   const currentChannel = useRecoilValue(CurrentChannel);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { socket, appendChannelMessage, updateChannelMessage } = useSocket();

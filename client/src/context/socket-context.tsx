@@ -6,13 +6,16 @@ import {
   FriendRequestsSent,
   Friends,
   Session,
-  User,
+  userAtom,
 } from "@/lib/store";
 import {
   ChannelMessageWithStatus,
   FilteredMessage,
+  FriendRequestQueryResponse,
+  FriendRequestReceived,
   FriendRequestSent,
   SocketData,
+  User,
 } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -23,7 +26,12 @@ type SocketContext = {
   socket: Socket | null;
   appendChannelMessage: (message: FilteredMessage) => void;
   updateChannelMessage: (message: FilteredMessage, messageId: string) => void;
-  updateFriendRequestsSent: (FriendRequest: FriendRequestSent) => void;
+  appendFriend: (friend: User) => void;
+  removeFriend: (friendId: string) => void;
+  appendFriendRequestsSent: (FriendRequest: FriendRequestSent) => void;
+  removeFriendRequestsSent: (requestId: string) => void;
+  appendFriendRequestsReceived: (FriendRequest: FriendRequestReceived) => void;
+  removeFriendRequestsReceived: (requestId: string) => void;
 };
 
 const SocketContext = createContext<SocketContext | null>(null);
@@ -44,7 +52,7 @@ const SocketContextProvider = ({ children }: Props) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(socket?.connected || false);
   const session = useRecoilValue(Session);
-  const user = useRecoilValue(User);
+  const user = useRecoilValue(userAtom);
   const setFriends = useSetRecoilState(Friends);
   const setFriendRequestsReceived = useSetRecoilState(FriendRequestsReceived);
   const setFriendRequestsSents = useSetRecoilState(FriendRequestsSent);
@@ -95,8 +103,32 @@ const SocketContextProvider = ({ children }: Props) => {
     });
   }
 
-  function updateFriendRequestsSent(FriendRequest: FriendRequestSent) {
+  function appendFriendRequestsSent(FriendRequest: FriendRequestSent) {
     setFriendRequestsSents((prev) => [...prev, FriendRequest]);
+  }
+
+  function removeFriendRequestsSent(requestId: string) {
+    setFriendRequestsSents((prev) =>
+      prev.filter((request) => request.id !== requestId),
+    );
+  }
+
+  function appendFriendRequestsReceived(FriendRequest: FriendRequestReceived) {
+    setFriendRequestsReceived((prev) => [...prev, FriendRequest]);
+  }
+
+  function removeFriendRequestsReceived(requestId: string) {
+    setFriendRequestsReceived((prev) =>
+      prev.filter((request) => request.id !== requestId),
+    );
+  }
+
+  function appendFriend(friend: User) {
+    setFriends((prev) => [...prev, friend]);
+  }
+
+  function removeFriend(friendId: string) {
+    setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
   }
 
   function handleUserStatus(data: SocketData & { isActive: boolean }) {
@@ -145,7 +177,22 @@ const SocketContextProvider = ({ children }: Props) => {
       socketInstance.on("disconnect", onDisconnect);
       socketInstance.on("channel:received-message", ReceiveChannelMessage);
       socketInstance.on("user:status", handleUserStatus);
-
+      socketInstance.on(
+        "friends:request-accepted",
+        (data: FriendRequestQueryResponse) => {
+          removeFriendRequestsSent(data.id);
+          appendFriend(data.receiver);
+        },
+      );
+      socketInstance.on(
+        "friends:request-received",
+        appendFriendRequestsReceived,
+      );
+      socketInstance.on("friends:request-declined", removeFriendRequestsSent);
+      socketInstance.on(
+        "friends:request-canceled",
+        removeFriendRequestsReceived,
+      );
       setSocket(socketInstance);
     }
 
@@ -153,6 +200,10 @@ const SocketContextProvider = ({ children }: Props) => {
       socket?.off("connect");
       socket?.off("disconnect");
       socket?.off("user:status");
+      socket?.off("friends:request-accepted");
+      socket?.off("friends:request-declined");
+      socket?.off("friends:request-received");
+      socket?.off("friends:request-canceled");
       socket?.off("channel:received-message");
       socket?.disconnect();
     };
@@ -165,7 +216,12 @@ const SocketContextProvider = ({ children }: Props) => {
         socket,
         appendChannelMessage,
         updateChannelMessage,
-        updateFriendRequestsSent,
+        appendFriend,
+        removeFriend,
+        appendFriendRequestsSent,
+        removeFriendRequestsSent,
+        appendFriendRequestsReceived,
+        removeFriendRequestsReceived,
       }}
     >
       {children}

@@ -5,10 +5,9 @@ const friendsHandler: IOHandler = (app, socket) => {
   socket.on("friends:send-request", sendRequest);
   socket.on("friends:accept-request", acceptRequest);
   socket.on("friends:decline-request", declineRequest);
+  socket.on("friends:cancel-request", cancelRequest);
 
   async function sendRequest(receiverUsername: string, cb: Acknowledgment) {
-    console.log(receiverUsername);
-
     try {
       if (receiverUsername === socket.data.username) {
         cb({
@@ -47,7 +46,9 @@ const friendsHandler: IOHandler = (app, socket) => {
       const requestExists = await Prisma.friendRequest.findFirst({
         where: {
           senderId: socket.data.id,
-          receiverId: receiverUsername,
+          receiver: {
+            username: receiverUsername,
+          },
         },
       });
       if (requestExists) {
@@ -79,15 +80,16 @@ const friendsHandler: IOHandler = (app, socket) => {
     }
   }
 
-  async function acceptRequest(senderId: string, cb: Acknowledgment) {
+  async function acceptRequest(requestId: string, cb: Acknowledgment) {
     try {
       const request = await Prisma.friendRequest.findFirst({
         where: {
-          senderId,
+          id: requestId,
           receiverId: socket.data.id,
         },
         include: {
           sender: true,
+          receiver: true,
         },
       });
       if (!request) {
@@ -104,13 +106,13 @@ const friendsHandler: IOHandler = (app, socket) => {
         },
         data: {
           friends: {
-            connect: { id: senderId },
+            connect: { id: request.senderId },
           },
         },
       });
       const accepted = Prisma.user.update({
         where: {
-          id: senderId,
+          id: request.senderId,
         },
         data: {
           friends: {
@@ -140,12 +142,39 @@ const friendsHandler: IOHandler = (app, socket) => {
           id: requestId,
         },
         include: {
-          sender: true,
+          sender: {
+            select: {
+              username: true,
+            },
+          },
         },
       });
       cb({ success: true, message: "Friend request declined.", data: request });
       app.store.forEachSocket(request.sender.username, (socketId) => {
-        app.io.to(socketId).emit("friends:request-declined", request);
+        app.io.to(socketId).emit("friends:request-declined", request.id);
+      });
+    } catch (err) {
+      app.log.error(err);
+    }
+  }
+
+  async function cancelRequest(requestId: string, cb: Acknowledgment) {
+    try {
+      const request = await Prisma.friendRequest.delete({
+        where: {
+          id: requestId,
+        },
+        include: {
+          receiver: {
+            select: {
+              username: true,
+            },
+          },
+        },
+      });
+      cb({ success: true, message: "Friend request canceled.", data: request });
+      app.store.forEachSocket(request.receiver.username, (socketId) => {
+        app.io.to(socketId).emit("friends:request-canceled", request.id);
       });
     } catch (err) {
       app.log.error(err);
