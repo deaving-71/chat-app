@@ -23,6 +23,7 @@ const inputVariants = cva("outline-none transition-all", {
   },
 });
 
+// @ts-ignore
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputVariants> {}

@@ -1,4 +1,4 @@
-import { MyConversation } from "@/types";
+import { ConversationWithMessages } from "@/types";
 import { API_URL } from "../../utils";
 
 async function getMyConversations() {
@@ -16,7 +16,7 @@ async function getMyConversations() {
 
   if (response.status !== 200) throw result;
 
-  return result as MyConversation[];
+  return result as ConversationWithMessages[];
 }
 
 export default getMyConversations;

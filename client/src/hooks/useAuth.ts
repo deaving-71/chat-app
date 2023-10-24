@@ -1,4 +1,4 @@
-import { login, logout, register, getAccessToken } from "@/lib/actions";
+import { login, getAccessToken } from "@/lib/actions";
 import {
   FriendRequestsReceived,
   FriendRequestsSent,
@@ -62,7 +62,6 @@ function useAuth() {
         status: "authenticated",
         expiresIn: 1000 * 60 * 14,
       });
-      return "finished";
     } catch (err) {
       console.error(err);
       setSession({

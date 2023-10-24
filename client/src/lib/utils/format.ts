@@ -1,4 +1,5 @@
-function formatDate(date: Date) {
+function formatDate(date?: Date | null) {
+  if (!date) return null;
   const newDate = typeof date === "string" ? new Date(date) : date;
   return newDate.toLocaleDateString("en-US", {
     day: "2-digit",

@@ -8,6 +8,7 @@ import { useSetRecoilState } from "recoil";
 import { ButtonAction } from "..";
 import { useSocket } from "@/context";
 import { ack } from "@/lib/actions";
+import Link from "next/link";
 
 type Props = User & {
   requestType?: "incoming" | "outgoing";
@@ -160,9 +161,12 @@ export default function FriendListItem({
         {!requestType && (
           <Dropdown>
             <DropdownItem>
-              <button className="w-full rounded-sm px-2 py-1 text-left hover:bg-muted">
+              <Link
+                className="w-full rounded-sm px-2 py-1 text-left hover:bg-muted"
+                href={`/app/direct-messages/${id}`}
+              >
                 Send a message
-              </button>
+              </Link>
             </DropdownItem>
             <DropdownItem>
               <button className="w-full rounded-sm px-2 py-1 text-left hover:bg-muted">

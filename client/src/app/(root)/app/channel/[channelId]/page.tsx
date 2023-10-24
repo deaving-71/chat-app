@@ -1,12 +1,12 @@
 "use client";
 
 import { Header, Members } from "@/components/channel";
-import { Chat } from "@/components/shared";
+import { Chat } from "@/components/channel";
 import { CurrentChannel, userAtom } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { getChannel } from "@/lib/actions";
-import { filterChannelMessages } from "@/lib/utils";
+import { filterMessages } from "@/lib/utils";
 import { useEffect } from "react";
 import { useSocket } from "@/context";
 
@@ -16,7 +16,7 @@ type Props = {
 
 export default function Channel({ params: { channelId } }: Props) {
   const setCurrentChannel = useSetRecoilState(CurrentChannel);
-  const { isConnected } = useSocket();
+  const { isConnected, socket, receiveChannelMessage } = useSocket();
   const user = useRecoilValue(userAtom);
   const {
     data: channel,
@@ -28,19 +28,21 @@ export default function Channel({ params: { channelId } }: Props) {
     queryKey: ["channel", channelId],
     queryFn: () => getChannel(channelId),
     enabled: !!user && isConnected,
-    refetchInterval: 1000 * 60 * 5,
+    refetchInterval: 1000 * 60 * 5, //refetch to update the users status
   });
 
   useEffect(() => {
     if (channel && isSuccess) {
       setCurrentChannel({
         ...channel,
-        messages: filterChannelMessages(channel.messages),
+        messages: filterMessages(channel.messages),
       });
+      socket?.on("channel:received-message", receiveChannelMessage);
     }
 
     return () => {
       setCurrentChannel(null);
+      socket?.off("channel:received-message");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel?.id, isSuccess]);

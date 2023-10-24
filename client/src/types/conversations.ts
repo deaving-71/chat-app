@@ -1,13 +1,33 @@
-import { Conversation, User, DirectMessage, Prettify } from ".";
+import { Conversation, User, DirectMessage, Prettify, Optional } from ".";
 
-type Message = DirectMessage & {
+export type DirectMessageWithSender = DirectMessage & {
   sender: User;
 };
 
-export type MyConversation = Prettify<
+export type MessageWithStatus = Prettify<
+  Optional<
+    DirectMessage & {
+      senderName: string;
+      senderAvatar: string;
+      status?: "pending" | "sent";
+    },
+    "conversationId" | "timestamp"
+  >
+>;
+
+export type ConversationWithMessages = Prettify<
   Conversation & {
     conversationInitiator: User;
     conversationReceiver: User;
-    messages: Message[];
+    messages: DirectMessageWithSender[];
   }
 >;
+
+export type DirectMessagePayload = {
+  conversationId: string;
+  friend: {
+    id: string;
+    username: string;
+  };
+  content: string;
+};

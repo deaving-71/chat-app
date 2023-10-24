@@ -18,7 +18,10 @@ export type SocketData = {
 };
 
 export type DirectMessage = {
-  receiverId: string;
+  friend: {
+    id: string;
+    username: string;
+  };
   conversationId: string;
   content: string;
 };

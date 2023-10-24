@@ -1,9 +1,24 @@
-import { MyConversation } from "@/types";
+import {
+  ConversationWithMessages,
+  FilteredMessage,
+  MessageWithStatus,
+  Prettify,
+} from "@/types";
 import { atom } from "recoil";
 
-const Conversations = atom<MyConversation[]>({
+type CurrentConversation = {
+  id: string;
+  messages: MessageWithStatus[];
+} | null;
+
+const Conversations = atom<ConversationWithMessages[]>({
   key: "Conversations",
   default: [],
 });
 
-export { Conversations };
+const CurrentConversation = atom<CurrentConversation>({
+  key: "CurrentConversation",
+  default: null,
+});
+
+export { Conversations, CurrentConversation };

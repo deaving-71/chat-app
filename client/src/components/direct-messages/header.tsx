@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { InboxIcon } from "@/lib/utils/icons";
 import { Button } from "../ui";
 import { useSidebarContext } from "@/context";
+import { formatDate } from "@/lib/utils";
 
 const RootHeader = dynamic(() => import("../shared/root-header"), {
   ssr: false,
@@ -11,8 +12,8 @@ const RootHeader = dynamic(() => import("../shared/root-header"), {
 
 type Props = {
   friend?: {
-    name: string;
-    lastSeen: Date;
+    name?: string;
+    lastSeen?: Date | null;
   };
 };
 
@@ -21,16 +22,13 @@ export default function Header({ friend }: Props) {
 
   return (
     <RootHeader className="flex items-center justify-between">
-      {friend ? (
-        <div>
-          <h1 className="text-2xl font-bold">Lorem Ipsum</h1>
-          <div className="text-xs text-foreground-secondary">
-            Last seen: 10:37
-          </div>
+      <div>
+        <h1 className="text-2xl font-bold">{friend?.name}</h1>
+        <div className="text-xs text-foreground-secondary">
+          {formatDate(friend?.lastSeen) ?? "online"}
         </div>
-      ) : (
-        <div></div>
-      )}
+      </div>
+
       <Button variant="circular" size="sm" onClick={toggleRightinfobar}>
         <InboxIcon size={20} />
       </Button>

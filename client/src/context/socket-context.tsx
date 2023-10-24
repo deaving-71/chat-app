@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CurrentConversation,
   CurrentChannel,
   FriendRequestsReceived,
   FriendRequestsSent,
@@ -10,10 +11,12 @@ import {
 } from "@/lib/store";
 import {
   ChannelMessageWithStatus,
+  DirectMessageWithSender,
   FilteredMessage,
   FriendRequestQueryResponse,
   FriendRequestReceived,
   FriendRequestSent,
+  MessageWithStatus,
   SocketData,
   User,
 } from "@/types";
@@ -24,14 +27,24 @@ import { Socket, io as ClientIO } from "socket.io-client";
 type SocketContext = {
   isConnected: boolean;
   socket: Socket | null;
-  appendChannelMessage: (message: FilteredMessage) => void;
-  updateChannelMessage: (message: FilteredMessage, messageId: string) => void;
   appendFriend: (friend: User) => void;
   removeFriend: (friendId: string) => void;
   appendFriendRequestsSent: (FriendRequest: FriendRequestSent) => void;
   removeFriendRequestsSent: (requestId: string) => void;
   appendFriendRequestsReceived: (FriendRequest: FriendRequestReceived) => void;
   removeFriendRequestsReceived: (requestId: string) => void;
+  receiveConvMessage: (
+    message: DirectMessageWithSender,
+    convId: string,
+  ) => void;
+  appendConvMessage: (message: MessageWithStatus) => void;
+  updateConvMessage: (message: MessageWithStatus, messageId: string) => void;
+  receiveChannelMessage: (
+    message: ChannelMessageWithStatus,
+    channelId: string,
+  ) => void;
+  appendChannelMessage: (message: FilteredMessage) => void;
+  updateChannelMessage: (message: FilteredMessage, messageId: string) => void;
 };
 
 const SocketContext = createContext<SocketContext | null>(null);
@@ -56,10 +69,55 @@ const SocketContextProvider = ({ children }: Props) => {
   const setFriends = useSetRecoilState(Friends);
   const setFriendRequestsReceived = useSetRecoilState(FriendRequestsReceived);
   const setFriendRequestsSents = useSetRecoilState(FriendRequestsSent);
-  const [currentChannel, setCurrentChannel] = useRecoilState(CurrentChannel);
+  const setCurrentChannel = useSetRecoilState(CurrentChannel);
+  const setCurrentConversation = useSetRecoilState(CurrentConversation);
 
   const onConnect = () => setIsConnected(true);
   const onDisconnect = () => setIsConnected(false);
+
+  function receiveConvMessage(
+    message: DirectMessageWithSender,
+    convId?: string,
+  ) {
+    if (message.conversationId !== convId) return;
+
+    const {
+      sender: { avatar, name },
+      ...rest
+    } = message;
+    appendConvMessage({
+      ...rest,
+      senderAvatar: avatar,
+      senderName: name,
+    });
+  }
+
+  function appendConvMessage(message: MessageWithStatus) {
+    setCurrentConversation((prev) => {
+      if (!prev) return null;
+      const newConvMessages = [...prev.messages, message];
+      return {
+        ...prev,
+        messages: newConvMessages,
+      };
+    });
+  }
+
+  function updateConvMessage(updates: MessageWithStatus, id: string) {
+    setCurrentConversation((prev) => {
+      if (!prev) return null;
+
+      const messages = prev.messages.map((message) => {
+        if (message.id !== id) return message;
+        return updates;
+      });
+
+      return {
+        ...prev,
+        messages: messages,
+      };
+    });
+  }
 
   function appendChannelMessage(message: FilteredMessage) {
     setCurrentChannel((prev) => {
@@ -87,9 +145,15 @@ const SocketContextProvider = ({ children }: Props) => {
     });
   }
 
-  function ReceiveChannelMessage(message: ChannelMessageWithStatus) {
+  /**
+   * Check if the message sent matches the channelId that the user is currently in.
+   */
+  function receiveChannelMessage(
+    message: ChannelMessageWithStatus,
+    channelId: string,
+  ) {
     if (message.senderId === user?.memberId) return;
-    if (message.channelId !== currentChannel?.id) return;
+    if (message.channelId !== channelId) return;
     const {
       sender: {
         user: { avatar, name },
@@ -148,7 +212,6 @@ const SocketContextProvider = ({ children }: Props) => {
         return { ...prev, owner };
       }
       const updatedMemberList = prev.members.map((member) => {
-        console.log(member, data);
         if (member.id === data.memberId) {
           const user = { ...member.user, isActive: data.isActive };
           const updatedMember = { ...member, user: user };
@@ -175,7 +238,7 @@ const SocketContextProvider = ({ children }: Props) => {
       socketInstance.connect();
       socketInstance.on("connect", onConnect);
       socketInstance.on("disconnect", onDisconnect);
-      socketInstance.on("channel:received-message", ReceiveChannelMessage);
+
       socketInstance.on("user:status", handleUserStatus);
       socketInstance.on(
         "friends:request-accepted",
@@ -204,7 +267,6 @@ const SocketContextProvider = ({ children }: Props) => {
       socket?.off("friends:request-declined");
       socket?.off("friends:request-received");
       socket?.off("friends:request-canceled");
-      socket?.off("channel:received-message");
       socket?.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,14 +276,18 @@ const SocketContextProvider = ({ children }: Props) => {
       value={{
         isConnected,
         socket,
-        appendChannelMessage,
-        updateChannelMessage,
         appendFriend,
         removeFriend,
         appendFriendRequestsSent,
         removeFriendRequestsSent,
         appendFriendRequestsReceived,
         removeFriendRequestsReceived,
+        receiveConvMessage,
+        appendConvMessage,
+        updateConvMessage,
+        receiveChannelMessage,
+        appendChannelMessage,
+        updateChannelMessage,
       }}
     >
       {children}

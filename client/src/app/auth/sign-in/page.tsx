@@ -4,7 +4,6 @@ import { Button, Input } from "@/components/ui";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { credentialSchema } from "@/lib/schemas";
-import { login } from "@/lib/actions";
 import { logExceptions } from "@/lib/utils";
 import { FormError } from "@/components/shared";
 import { LoginCredentials } from "@/types";
@@ -19,8 +18,8 @@ export default function Login() {
     formState: { errors },
   } = useForm<LoginCredentials>({
     defaultValues: {
-      username: undefined,
-      password: undefined,
+      username: "",
+      password: "",
     },
     resolver: zodResolver(credentialSchema),
   });

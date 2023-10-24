@@ -1,7 +1,7 @@
 import { SignupForm } from "@/types";
 import { API_URL } from "../../utils";
 
-async function register(formdata: SignupForm) {
+async function signup(formdata: SignupForm) {
   const response = await fetch(`${API_URL}/auth/sign-up`, {
     method: "POST",
     headers: {
@@ -23,4 +23,4 @@ async function register(formdata: SignupForm) {
   return data;
 }
 
-export default register;
+export default signup;

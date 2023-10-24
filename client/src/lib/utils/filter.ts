@@ -1,4 +1,9 @@
-import { ChannelMessageWithStatus, Sender } from "@/types";
+import {
+  ChannelMessageWithStatus,
+  DirectMessageWithSender,
+  MessageWithStatus,
+  Sender,
+} from "@/types";
 
 /**
  * filter online and offline members from a list of members of a certain channel.
@@ -17,7 +22,7 @@ function filterMembers(members: Sender[], ownerId: string) {
   return [onlineMembers, offlineMembers];
 }
 
-function filterChannelMessages(messages: ChannelMessageWithStatus[]) {
+function filterMessages(messages: ChannelMessageWithStatus[]) {
   return messages.map((message) => {
     const { sender, ...rest } = message;
     return {
@@ -28,4 +33,15 @@ function filterChannelMessages(messages: ChannelMessageWithStatus[]) {
   });
 }
 
-export { filterMembers, filterChannelMessages };
+function filterConvMessages(messages: DirectMessageWithSender[]) {
+  const filteredMessages = messages.map((message) => {
+    const { sender, ...rest } = message;
+    return {
+      ...rest,
+      senderName: sender.name,
+      senderAvatar: sender.avatar,
+    };
+  });
+  return filteredMessages;
+}
+export { filterMembers, filterMessages, filterConvMessages };

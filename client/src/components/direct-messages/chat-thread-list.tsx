@@ -4,13 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import StatusDot from "../shared/status-dot";
 import { ThreeDots } from "@/lib/utils/icons";
-import { MyConversation } from "@/types";
+import { ConversationWithMessages } from "@/types";
 import { useRecoilValue } from "recoil";
 import { userAtom } from "@/lib/store";
 import { lastMessageTimestamp } from "@/lib/utils";
 
 type Props = {
-  conversations: MyConversation[];
+  conversations: ConversationWithMessages[];
 };
 
 export default function ChatThreadList({ conversations }: Props) {

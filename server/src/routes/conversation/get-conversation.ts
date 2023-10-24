@@ -1,20 +1,24 @@
 import { RouteHandler } from "fastify";
 import { Prisma } from "../../lib";
 
-const getConversation: RouteHandler<{ Params: { id: string } }> = async (
+/**
+ * The url param userId, is the user that we are looking for to
+ * view conversation or send them a message.
+ */
+const getConversation: RouteHandler<{ Params: { userId: string } }> = async (
   request,
   response
 ) => {
-  const { id } = request.params;
+  const { userId } = request.params;
   const conversation = await Prisma.conversation.findFirst({
     where: {
       OR: [
         {
-          id: id,
+          conversationReceiverId: userId,
           conversationInitiatorId: request.user.id,
         },
         {
-          id: id,
+          conversationInitiatorId: userId,
           conversationReceiverId: request.user.id,
         },
       ],
@@ -29,6 +33,16 @@ const getConversation: RouteHandler<{ Params: { id: string } }> = async (
       },
     },
   });
+
+  if (!conversation) {
+    const createdConversation = await Prisma.conversation.create({
+      data: {
+        conversationInitiatorId: request.user.id,
+        conversationReceiverId: userId,
+      },
+    });
+    return response.ok(createdConversation);
+  }
   response.ok(conversation);
 };
 

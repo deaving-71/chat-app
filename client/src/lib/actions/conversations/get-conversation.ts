@@ -1,8 +1,8 @@
-import { MyConversation } from "@/types";
+import { ConversationWithMessages } from "@/types";
 import { API_URL } from "../../utils";
 
-async function getConversation(id: string) {
-  const response = await fetch(`${API_URL}/conversations/${id}`, {
+async function getConversation(friendId: string) {
+  const response = await fetch(`${API_URL}/conversations/${friendId}`, {
     credentials: "include",
   });
 
@@ -16,7 +16,7 @@ async function getConversation(id: string) {
 
   if (response.status !== 200) throw result;
 
-  return result as MyConversation;
+  return result as ConversationWithMessages;
 }
 
 export default getConversation;

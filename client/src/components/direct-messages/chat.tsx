@@ -1,27 +1,33 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Input } from "../ui";
 import { SendFill } from "@/lib/utils/icons";
 import {
   AcknowledgementCallback,
-  ChannelMessageWithStatus,
-  FilteredMessage,
-  SendChannelMessagePayload,
+  DirectMessagePayload,
+  DirectMessageWithSender,
+  MessageWithStatus,
 } from "@/types";
 import { useRef } from "react";
 import { useRecoilValue } from "recoil";
-import { CurrentChannel, userAtom } from "@/lib/store";
+import { userAtom, CurrentConversation } from "@/lib/store";
 import { Messages } from "../channel";
 import { useSocket } from "@/context";
 
 type Props = {
   className?: string;
+  friend: {
+    id: string;
+    username: string;
+  };
 };
 
-export default function Chat({ className }: Props) {
+export function Chat({ className = "", friend }: Props) {
   const user = useRecoilValue(userAtom);
-  const currentChannel = useRecoilValue(CurrentChannel);
+  const currentConv = useRecoilValue(CurrentConversation);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { socket, appendChannelMessage, updateChannelMessage } = useSocket();
+  const { socket, appendConvMessage, updateConvMessage } = useSocket();
 
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();
@@ -30,14 +36,13 @@ export default function Chat({ className }: Props) {
       !inputRef ||
       !inputRef.current ||
       !user ||
-      !currentChannel ||
       inputRef.current.value.trim() === ""
     )
       return;
 
     const generatedId = crypto.randomUUID();
     const messageContent = inputRef.current.value;
-    const optimisticMessage: FilteredMessage = {
+    const optimisticMessage: MessageWithStatus = {
       id: generatedId,
       senderAvatar: user.avatar,
       senderName: user.name,
@@ -47,28 +52,27 @@ export default function Chat({ className }: Props) {
     };
 
     inputRef.current.value = "";
-    appendChannelMessage(optimisticMessage);
-    const payload: SendChannelMessagePayload = {
-      channelId: currentChannel?.id,
-      memberId: user.memberId,
-      messageContent: messageContent,
+    appendConvMessage(optimisticMessage);
+    const payload: DirectMessagePayload = {
+      conversationId: currentConv?.id ?? "",
+      friend: friend,
+      content: messageContent,
     };
-    const ack: AcknowledgementCallback<ChannelMessageWithStatus> = ({
+
+    const ack: AcknowledgementCallback<DirectMessageWithSender> = ({
       message,
       data,
       success,
     }) => {
       if (success) {
-        console.log(message);
-        console.log(data);
-        updateChannelMessage(
+        updateConvMessage(
           {
             id: data.id,
             content: data.content,
-            senderAvatar: data.sender.user.avatar,
-            senderName: data.sender.user.name,
+            senderAvatar: data.sender.avatar,
+            senderName: data.sender.name,
             senderId: data.senderId,
-            channelId: data.channelId,
+            conversationId: data.conversationId,
             status: "sent",
             timestamp: data.timestamp,
           },
@@ -78,13 +82,14 @@ export default function Chat({ className }: Props) {
         console.error(message);
       }
     };
-    socket?.emit("channel:send-message", payload, ack);
+
+    socket?.emit("direct-message:send-message", payload, ack);
   }
 
   return (
     <main className={cn(className, "grid grid-rows-[var(--chat-height),auto]")}>
       <div className="overflow-y-auto">
-        {currentChannel && <Messages messages={currentChannel.messages} />}
+        <Messages messages={currentConv?.messages ?? []} />
       </div>
       <form className="relative" onSubmit={(e) => sendMessage(e)}>
         <Input
