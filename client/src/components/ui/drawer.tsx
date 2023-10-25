@@ -1,13 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { createContext, useContext, useState, forwardRef } from "react";
-import { motion } from "framer-motion";
+import {
+  createContext,
+  useContext,
+  useState,
+  forwardRef,
+  useEffect,
+} from "react";
+import { motion, Variants } from "framer-motion";
 
-// ! sheesh
-// ? sheesh
-// * sheesh
-// TODO: sheesh
 type DrawerContext = {
   open: boolean;
   toggleDrawer: () => void;
@@ -33,22 +35,55 @@ const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
   const styles: React.CSSProperties = {
     width: `${width}px`,
   };
+  const [mounted, setMounted] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  const md = windowWidth > 0 && windowWidth < 768;
+
+  const mdAnimation = {
+    initial: {
+      x: 0,
+    },
+    animate: { x: open ? -width : 0 },
+  };
+
+  const lgAnimation = {
+    initial: {
+      width: width,
+    },
+    animate: { width: open ? width : 80 },
+  };
+
+  useEffect(() => {
+    setMounted(true);
+    setWindowWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && typeof window !== undefined) {
+      window.addEventListener("resize", () => {
+        setWindowWidth(window.innerWidth);
+      });
+    }
+  }, [mounted]);
 
   return (
     <DrawerContext.Provider value={{ open, toggleDrawer }}>
       <motion.div
-        className={cn("h-full min-h-screen bg-black text-gray-200")}
+        className={cn(
+          "sticky left-0 top-0 h-full min-h-screen bg-black text-gray-200",
+        )}
         style={styles}
-        initial={{ x: 0 }}
-        animate={{ x: open ? -width : 0 }}
+        initial="initial"
+        animate="animate"
+        variants={md ? mdAnimation : lgAnimation}
         transition={{
-          type: "easeInOut",
+          type: "tween",
           duration: 0.2,
         }}
       >
         {children}
       </motion.div>
-      ;
     </DrawerContext.Provider>
   );
 };
@@ -80,7 +115,7 @@ type ContentProps = {
 };
 
 const Content = ({ children }: ContentProps) => {
-  return <>{children}</>;
+  return <div className="grid h-full place-content-center">{children}</div>;
 };
 
 Trigger.displayName = "Trigger";

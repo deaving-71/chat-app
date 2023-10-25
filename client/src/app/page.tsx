@@ -10,13 +10,19 @@ export default function Home() {
 
   return (
     <>
-    <button className= "rounded-md bg-blue-500 p-2 text-sm hover:bg-blue-700" onClick={toggleDrawer}>trigger 2</button>
+      <button
+        className="rounded-md bg-blue-500 p-2 text-sm hover:bg-blue-700"
+        onClick={toggleDrawer}
+      >
+        trigger 2
+      </button>
       <Drawer.Root open={open} toggleDrawer={toggleDrawer}>
         <Drawer.Trigger></Drawer.Trigger>
         <Drawer.Content>
-          <p>Hey there</p>
+          <p>Drawer</p>
         </Drawer.Content>
       </Drawer.Root>
+
       <main className="mx-auto w-[500px] pt-56">
         <h1>Main page</h1>
       </main>
