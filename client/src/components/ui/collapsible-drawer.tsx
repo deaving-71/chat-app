@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import {
   createContext,
   useContext,
-  useState,
   forwardRef,
+  useState,
   useEffect,
 } from "react";
-import { motion } from "framer-motion";
+import { Variants, motion } from "framer-motion";
 
 type DrawerContext = {
   open: boolean;
@@ -29,9 +29,18 @@ type RootProps = DrawerContext & {
   children: React.ReactNode;
   width?: number;
   open: boolean;
+  dir?: "left" | "right";
+  className: string;
 };
 
-const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
+const Root = ({
+  children,
+  open,
+  toggleDrawer,
+  width = 280,
+  dir = "left",
+  className = "",
+}: RootProps) => {
   const [windowWidth, setWindowWidth] = useState(0);
   const md = windowWidth > 0 && windowWidth < 768;
 
@@ -39,18 +48,11 @@ const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
     width: `${width}px`,
   };
 
-  const mdAnimation = {
-    initial: {
-      x: 0,
-    },
-    animate: { x: open ? -width : 0 },
-  };
-
-  const lgAnimation = {
+  const animation = {
     initial: {
       width: width,
     },
-    animate: { width: open ? width : 80 },
+    animate: { width: open ? width : 0 },
   };
 
   useEffect(() => {
@@ -64,12 +66,14 @@ const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
     <DrawerContext.Provider value={{ open, toggleDrawer }}>
       <motion.div
         className={cn(
-          "sticky left-0 top-0 h-full min-h-screen bg-black text-gray-200",
+          "fixed top-0 h-full min-h-screen overflow-hidden whitespace-nowrap bg-black text-gray-200 md:sticky",
+          className,
+          `${dir}-0`,
         )}
         style={styles}
         initial="initial"
         animate="animate"
-        variants={md ? mdAnimation : lgAnimation}
+        variants={animation}
         transition={{
           type: "tween",
           duration: 0.2,
@@ -105,5 +109,5 @@ const Trigger = forwardRef<HTMLButtonElement, ButtonProps>(
 
 Trigger.displayName = "Trigger";
 
-const Drawer = { Root, Trigger };
-export { Drawer };
+const CollapsibleDrawer = { Root, Trigger };
+export { CollapsibleDrawer };
