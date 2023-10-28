@@ -1,6 +1,6 @@
 "use client";
 
-import { BlackCover, Sidebar } from "@/components/shared";
+import { Sidebar } from "@/components/shared";
 import { SocketContextProvider } from "@/context/";
 import { Session } from "@/lib/store";
 import { useRouter } from "next/navigation";
@@ -21,19 +21,15 @@ export default function AppLayout({ children }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.status]);
 
+  if (session?.status === "loading") return <div>Loading...</div>;
+
+  // TODO: 2 sockets are set when logging in
   return (
     <SocketContextProvider>
-      {session?.status === "loading" ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          <BlackCover />
-          <div className="h-full min-h-screen grid-cols-[auto,1fr] grid-rows-1 lg:grid">
-            <Sidebar />
-            {children}
-          </div>
-        </>
-      )}
+      <div className="h-full min-h-screen grid-cols-[auto,1fr] grid-rows-1 lg:grid">
+        <Sidebar />
+        {children}
+      </div>
     </SocketContextProvider>
   );
 }

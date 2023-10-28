@@ -9,6 +9,7 @@ import {
   useEffect,
 } from "react";
 import { motion } from "framer-motion";
+import { Slot } from "@radix-ui/react-slot";
 
 type DrawerContext = {
   open: boolean;
@@ -29,9 +30,16 @@ type RootProps = DrawerContext & {
   children: React.ReactNode;
   width?: number;
   open: boolean;
+  className?: string;
 };
 
-const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
+const Root = ({
+  children,
+  width = 280,
+  open,
+  toggleDrawer,
+  className = "",
+}: RootProps) => {
   const [windowWidth, setWindowWidth] = useState(0);
   const md = windowWidth > 0 && windowWidth < 768;
 
@@ -50,7 +58,7 @@ const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
     initial: {
       width: width,
     },
-    animate: { width: open ? width : 80 },
+    animate: { width: open ? width : 65 },
   };
 
   useEffect(() => {
@@ -64,7 +72,8 @@ const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
     <DrawerContext.Provider value={{ open, toggleDrawer }}>
       <motion.div
         className={cn(
-          "sticky left-0 top-0 h-full min-h-screen bg-black text-gray-200",
+          "fixed left-0 top-0 h-full min-h-screen overflow-x-hidden md:sticky",
+          className,
         )}
         style={styles}
         initial="initial"
@@ -81,24 +90,17 @@ const Root = ({ children, width = 280, open, toggleDrawer }: RootProps) => {
   );
 };
 
-type ButtonProps = React.HTMLProps<HTMLButtonElement>;
+type ButtonProps = React.HTMLProps<HTMLButtonElement> & { asChild?: boolean };
 
 const Trigger = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, type = "button", className, ...props }, ref) => {
+  ({ children, type = "button", className, asChild, ...props }, ref) => {
     const { toggleDrawer } = useDrawerContext();
+
+    const Comp = asChild ? Slot : "button";
     return (
-      <button
-        {...props}
-        ref={ref}
-        className={cn(
-          "rounded-md bg-blue-500 p-2 text-sm hover:bg-blue-700",
-          className,
-        )}
-        onClick={toggleDrawer}
-      >
+      <Comp {...props} ref={ref} className={className} onClick={toggleDrawer}>
         {children}
-        Trigger
-      </button>
+      </Comp>
     );
   },
 );

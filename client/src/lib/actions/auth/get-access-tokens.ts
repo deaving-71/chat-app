@@ -1,3 +1,4 @@
+import { UserProfileInfo } from "@/types";
 import { API_URL } from "../../utils";
 
 async function getAccessToken() {
@@ -15,7 +16,7 @@ async function getAccessToken() {
 
   if (response.status !== 200) throw result;
 
-  return result;
+  return result as UserProfileInfo;
 }
 
 export default getAccessToken;

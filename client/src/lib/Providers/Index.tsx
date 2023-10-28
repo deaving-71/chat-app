@@ -18,14 +18,14 @@ export default function Providers({ children }: Props) {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider interval={1000 * 60 * 14}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <SidebarContextProvider>{children}</SidebarContextProvider>
           </ThemeProvider>
         </AuthProvider>
-      </RecoilRoot>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 }

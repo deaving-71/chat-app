@@ -2,6 +2,7 @@ import Providers from "@/lib/Providers/Index";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { cn } from "@/lib/utils";
 
 const font = Poppins({
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
@@ -20,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={font.className}>
+      <body className={cn("", font.className)}>
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -5,14 +5,15 @@ import {
   createContext,
   useContext,
   forwardRef,
-  useState,
   useEffect,
+  useState,
 } from "react";
 import { Variants, motion } from "framer-motion";
+import { Slot } from "@radix-ui/react-slot";
 
 type DrawerContext = {
   open: boolean;
-  toggleDrawer: () => void;
+  toggleDrawer?: () => void;
 };
 
 const DrawerContext = createContext<DrawerContext | null>(null);
@@ -30,7 +31,7 @@ type RootProps = DrawerContext & {
   width?: number;
   open: boolean;
   dir?: "left" | "right";
-  className: string;
+  className?: string;
 };
 
 const Root = ({
@@ -39,8 +40,9 @@ const Root = ({
   toggleDrawer,
   width = 280,
   dir = "left",
-  className = "",
+  className,
 }: RootProps) => {
+  //TODO: use media match query >>> window.matchMedia("(max-width: 700px)")
   const [windowWidth, setWindowWidth] = useState(0);
   const md = windowWidth > 0 && windowWidth < 768;
 
@@ -48,7 +50,15 @@ const Root = ({
     width: `${width}px`,
   };
 
-  const animation = {
+  // -${dir}-${width} md:${dir}-0
+  const mdAnimation = {
+    initial: {
+      x: "100vw",
+    },
+    animate: { x: open ? "100vw" : 0 },
+  };
+
+  const lgAnimation = {
     initial: {
       width: width,
     },
@@ -66,14 +76,14 @@ const Root = ({
     <DrawerContext.Provider value={{ open, toggleDrawer }}>
       <motion.div
         className={cn(
-          "fixed top-0 h-full min-h-screen overflow-hidden whitespace-nowrap bg-black text-gray-200 md:sticky",
+          "fixed top-0 h-full min-h-screen overflow-hidden md:sticky",
           className,
           `${dir}-0`,
         )}
         style={styles}
         initial="initial"
         animate="animate"
-        variants={animation}
+        variants={md ? mdAnimation : lgAnimation}
         transition={{
           type: "tween",
           duration: 0.2,
@@ -85,24 +95,24 @@ const Root = ({
   );
 };
 
-type ButtonProps = React.HTMLProps<HTMLButtonElement>;
+type ButtonProps = React.HTMLProps<HTMLButtonElement> & { asChild?: boolean };
 
 const Trigger = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, type = "button", className, ...props }, ref) => {
+  ({ children, type = "button", className, asChild, ...props }, ref) => {
     const { toggleDrawer } = useDrawerContext();
+
+    const Comp = asChild ? Slot : "button";
     return (
-      <button
+      <Comp
         {...props}
         ref={ref}
-        className={cn(
-          "rounded-md bg-blue-500 p-2 text-sm hover:bg-blue-700",
-          className,
-        )}
-        onClick={toggleDrawer}
+        className={className}
+        onClick={() => {
+          if (toggleDrawer) toggleDrawer();
+        }}
       >
         {children}
-        Trigger
-      </button>
+      </Comp>
     );
   },
 );

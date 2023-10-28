@@ -57,11 +57,12 @@ function useAuth() {
 
   const refreshAccess = async () => {
     try {
-      await getAccessToken();
+      const data = await getAccessToken();
       setSession({
         status: "authenticated",
         expiresIn: 1000 * 60 * 14,
       });
+      return data;
     } catch (err) {
       console.error(err);
       setSession({

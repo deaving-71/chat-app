@@ -1,7 +1,7 @@
 import { AddFriend } from ".";
 import { Button } from "../ui/";
 
-export default function Tabs() {
+function Tabs() {
   return (
     <div className="hidden items-center justify-between p-8 lg:flex">
       <div className="flex items-center gap-2">
@@ -13,3 +13,5 @@ export default function Tabs() {
     </div>
   );
 }
+
+export {Tabs }

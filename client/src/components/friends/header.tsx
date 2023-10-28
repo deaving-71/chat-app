@@ -1,16 +1,14 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { UserRectangle } from "@/lib/utils/icons";
 import { Button } from "../ui";
-import { useSidebarContext } from "@/context";
+import { RootHeader } from "../shared";
+import { useSetRecoilState } from "recoil";
+import { RightInfoBarAtom } from "@/lib/store";
 
-const RootHeader = dynamic(() => import("../shared/root-header"), {
-  ssr: false,
-});
-
-export default function Header() {
-  const { toggleRightinfobar } = useSidebarContext();
+function Header() {
+  const setOpen = useSetRecoilState(RightInfoBarAtom);
+  const toggleRightinfobar = () => setOpen((prev) => !prev);
 
   return (
     <RootHeader className="flex items-center justify-between">
@@ -21,3 +19,5 @@ export default function Header() {
     </RootHeader>
   );
 }
+
+export { Header };

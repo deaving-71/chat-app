@@ -13,7 +13,7 @@ function ButtonAction({ tooltip = "tooltip", children }: Props) {
       <Tooltip.Root>
         <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content className="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade select-none rounded-[4px] bg-background p-2 text-sm font-medium leading-none tracking-tight text-foreground shadow-[0_0_14px_-6px_var(--foreground)] transition-all will-change-[transform,opacity]">
+          <Tooltip.Content className="select-none rounded-[4px] bg-background p-2 text-sm font-medium leading-none tracking-tight text-foreground shadow-[0_0_14px_-6px_var(--foreground)] transition-all will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
             {tooltip}
             <Tooltip.Arrow className="fill-white" />
           </Tooltip.Content>
@@ -23,4 +23,4 @@ function ButtonAction({ tooltip = "tooltip", children }: Props) {
   );
 }
 
-export default ButtonAction;
+export { ButtonAction };

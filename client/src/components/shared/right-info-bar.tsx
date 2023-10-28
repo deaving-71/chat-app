@@ -1,22 +1,29 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import DefaultRightInfoBar from "./right-info-bar/default-right-info-bar";
-import MobileRightInfoBar from "./right-info-bar/mobile-right-info-bar";
-import { useMediaQuery } from "usehooks-ts";
-import { MotionProps } from "framer-motion";
+import { CollapsibleDrawer as Drawer } from "../ui";
+import { useRecoilState } from "recoil";
+import { RightInfoBarAtom } from "@/lib/store";
 
-type Props = React.ComponentPropsWithRef<"aside"> & MotionProps;
+type Props = React.PropsWithChildren;
 
-function RightInfoBar(props: Props) {
-  const lg = useMediaQuery("(min-width: 1024px)");
+function RightInfoBar({ children }: Props) {
+  const [open, setOpen] = useRecoilState(RightInfoBarAtom);
+  const toggleDrawer = () => setOpen((prev) => !prev);
 
-  const CurrentRightinfobar = {
-    default: DefaultRightInfoBar,
-    mobile: MobileRightInfoBar,
-  }[lg ? "default" : "mobile"];
-
-  return <CurrentRightinfobar {...props} />;
+  return (
+    <Drawer.Root
+      open={open}
+      toggleDrawer={toggleDrawer}
+      className="row-span-2 border-l border-border bg-background shadow-md md:shadow-none"
+      width={240}
+      dir="right"
+    >
+      <div>
+        <button onClick={toggleDrawer}>toggle</button>
+      </div>
+      {children}
+    </Drawer.Root>
+  );
 }
 
-export default dynamic(() => Promise.resolve(RightInfoBar), { ssr: false });
+export { RightInfoBar };

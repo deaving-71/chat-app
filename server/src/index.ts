@@ -36,14 +36,14 @@ const app = Fastify({
 });
 
 const corsOptions = {
-  origin: ["http://localhost:4000", "http:127.0.0.1:4000"],
+  origin: ["http://localhost:4000", "http://127.0.0.1:4000"],
   credentials: true,
 };
 
 app.register(fastifyEnv);
 app.register(cors, corsOptions);
 app.register(SocketIO, {
-  cors: corsOptions
+  cors: corsOptions,
 });
 app.register(store);
 app.register(customresponses);

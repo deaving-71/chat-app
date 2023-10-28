@@ -1,13 +1,12 @@
 import { useRecoilValue } from "recoil";
-import { Session, userAtom } from "../store";
+import { Session } from "../store";
 import { useAuth } from "@/hooks";
-import { getProfile } from "../actions";
 import { useQuery } from "@tanstack/react-query";
 
 type AuthProviderProps = {
   children: React.ReactNode;
 
-  /** interval time in milli-seconds */
+  /** interval time in milli-seconds, default is 14mins */
   interval?: number;
 };
 
@@ -15,24 +14,19 @@ function AuthProvider({
   children,
   interval = 1000 * 60 * 14,
 }: AuthProviderProps) {
-  const session = useRecoilValue(Session);
-  const user = useRecoilValue(userAtom); // todo: remove this later
   const { refreshAccess, setUserProfile } = useAuth();
-  const { status } = useQuery({
-    queryKey: ["refreshAccess"],
-    queryFn: refreshAccess,
-    refetchInterval: interval,
-  });
+  const session = useRecoilValue(Session);
 
   useQuery({
-    queryKey: ["getProfile", status, session?.status],
+    queryKey: ["refreshAccess"],
     queryFn: async () => {
-      const data = await getProfile();
+      const data = await refreshAccess();
+      // @ts-ignore //? type set correctly but still getting type error
       setUserProfile(data);
       return data;
     },
-    cacheTime: 1000 * 60 * 60, // 1hr
-    enabled: session?.status === "authenticated" && status === "success",
+    refetchInterval: interval,
+    enabled: session?.status === "loading",
   });
 
   return <>{children}</>;
