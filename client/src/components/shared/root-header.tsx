@@ -17,7 +17,7 @@ function RootHeader({ children, className, ...props }: Props) {
         <Button
           variant="circular"
           size="sm"
-          className="mr-2 md:hidden"
+          className="mr-2 lg:hidden"
           onClick={() => setOpen((prev) => !prev)}
         >
           <BurgerMenu />

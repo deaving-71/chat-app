@@ -14,7 +14,7 @@ export default function FriendProfileInfo() {
   if (!friend)
     return (
       <RightInfoBar>
-        <div className="gird h-full place-content-center overflow-hidden whitespace-nowrap text-center font-medium tracking-tight">
+        <div className="grid h-full place-content-center overflow-hidden whitespace-nowrap text-center font-medium tracking-tight">
           Select a friend to <br /> view their profile.
         </div>
       </RightInfoBar>

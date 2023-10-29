@@ -9,6 +9,7 @@ import { ButtonAction } from "..";
 import { useSocket } from "@/context";
 import { ack } from "@/lib/actions";
 import Link from "next/link";
+import { StatusDot } from "@/components/shared";
 
 type Props = User & {
   requestType?: "incoming" | "outgoing";
@@ -20,6 +21,7 @@ export default function FriendListItem({
   requestId,
   avatar,
   name,
+  isActive,
   requestType,
 }: Props) {
   const selectFriendProfile = useSetRecoilState(SelectedFriendId);
@@ -108,13 +110,16 @@ export default function FriendListItem({
         onClick={() => selectFriendProfile(id)}
       >
         <div className="flex items-center">
-          <Image
-            src={avatar}
-            alt="Profile Avatar"
-            width={36}
-            height={36}
-            className="mr-2 h-9 w-9 rounded-full object-contain"
-          />
+          <div className="relative">
+            <Image
+              src={avatar}
+              alt="Profile Avatar"
+              width={36}
+              height={36}
+              className="mr-2 h-9 w-9 rounded-full object-contain"
+            />
+            <StatusDot status={isActive} />
+          </div>
           <span className="font-medium">{name}</span>
         </div>
         {requestType === "outgoing" && (

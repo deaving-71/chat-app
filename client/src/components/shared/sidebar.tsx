@@ -8,6 +8,7 @@ import { cn, sidebar } from "@/lib/utils";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Channels, SidebarAtom, userAtom } from "@/lib/store";
 import { Drawer } from "../ui";
+import { useMediaQuery } from "@/hooks";
 
 function Sidebar() {
   const user = useRecoilValue(userAtom);
@@ -15,6 +16,9 @@ function Sidebar() {
 
   const [open, setOpen] = useRecoilState(SidebarAtom);
   const toggleDrawer = () => setOpen((prev) => !prev);
+
+  const lg = useMediaQuery(1024);
+  const showText = lg ? true : open;
 
   return (
     <Drawer.Root
@@ -29,7 +33,7 @@ function Sidebar() {
               variant="squared"
               className="bg-background p-1 hover:bg-muted"
             >
-              <Arrow className={cn(!open && "md:rotate-180")} size={24} />
+              <Arrow className={cn(!open && "lg:rotate-180")} size={24} />
             </Button>
           </Drawer.Trigger>
         </div>
@@ -42,10 +46,10 @@ function Sidebar() {
               height={48}
               className={cn(
                 "h-12 w-12 rounded-full object-contain",
-                open && "mr-2",
+                showText && "mr-2",
               )}
             />
-            {open && (
+            {showText && (
               <div>
                 <div className="font-semibold">{user?.name}</div>
                 <div className="inline-block rounded-2xl border border-success px-[0.375rem] py-[1px] text-[0.75rem] font-semibold leading-3 text-success">
@@ -64,11 +68,14 @@ function Sidebar() {
                   href={href}
                   className={cn(
                     "flex items-center px-4 py-2 font-semibold transition-all hover:bg-muted",
-                    open ? "" : "justify-center",
+                    showText ? "" : "justify-center",
                   )}
                 >
-                  <Icon size={open ? 20 : 24} className={open && "mr-2"} />
-                  {open && title}
+                  <Icon
+                    size={showText ? 20 : 24}
+                    className={showText && "mr-2"}
+                  />
+                  {showText && title}
                 </Link>
               </li>
             ))}
@@ -78,20 +85,23 @@ function Sidebar() {
             <div
               className={cn(
                 "flex w-full items-center px-4 py-2 font-semibold",
-                open ? "justify-between " : "justify-center",
+                showText ? "justify-between " : "justify-center",
               )}
             >
               <span className="flex items-center">
-                <Hashtag size={open ? 20 : 24} className={open && "mr-2"} />
-                {open && "Channels"}
+                <Hashtag
+                  size={showText ? 20 : 24}
+                  className={showText && "mr-2"}
+                />
+                {showText && "Channels"}
               </span>
-              {open && (
+              {showText && (
                 <button className="rounded-full p-[0.125rem] transition-all hover:bg-muted">
                   <Plus size={20} />
                 </button>
               )}
             </div>
-            {open && (
+            {showText && (
               <ul>
                 <li key="global-channel">
                   <Link

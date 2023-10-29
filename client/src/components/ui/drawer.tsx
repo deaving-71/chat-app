@@ -41,7 +41,7 @@ const Root = ({
   className = "",
 }: RootProps) => {
   const [windowWidth, setWindowWidth] = useState(0);
-  const md = windowWidth > 0 && windowWidth < 768;
+  const lg = windowWidth > 0 && windowWidth < 1024;
 
   const styles: React.CSSProperties = {
     width: `${width}px`,
@@ -72,13 +72,13 @@ const Root = ({
     <DrawerContext.Provider value={{ open, toggleDrawer }}>
       <motion.div
         className={cn(
-          "fixed left-0 top-0 h-full min-h-screen overflow-x-hidden md:sticky",
+          "fixed left-0 top-0 h-full min-h-screen overflow-x-hidden lg:sticky",
           className,
         )}
         style={styles}
         initial="initial"
         animate="animate"
-        variants={md ? mdAnimation : lgAnimation}
+        variants={lg ? mdAnimation : lgAnimation}
         transition={{
           type: "tween",
           duration: 0.2,

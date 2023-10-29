@@ -44,7 +44,7 @@ const Root = ({
 }: RootProps) => {
   //TODO: use media match query >>> window.matchMedia("(max-width: 700px)")
   const [windowWidth, setWindowWidth] = useState(0);
-  const md = windowWidth > 0 && windowWidth < 768;
+  const lg = windowWidth > 0 && windowWidth < 1024;
 
   const styles: React.CSSProperties = {
     width: `${width}px`,
@@ -76,14 +76,14 @@ const Root = ({
     <DrawerContext.Provider value={{ open, toggleDrawer }}>
       <motion.div
         className={cn(
-          "fixed top-0 h-full min-h-screen overflow-hidden md:sticky",
+          "fixed top-0 h-full min-h-screen overflow-x-hidden lg:sticky",
           className,
           `${dir}-0`,
         )}
         style={styles}
         initial="initial"
         animate="animate"
-        variants={md ? mdAnimation : lgAnimation}
+        variants={lg ? mdAnimation : lgAnimation}
         transition={{
           type: "tween",
           duration: 0.2,
